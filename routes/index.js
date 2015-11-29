@@ -48,6 +48,16 @@ function foodlog(req, res){
 	res.render("foodlog");
 }
 
+//This API renders BODYPROFILE page
+
+function bodyprofile(req, res){
+
+	console.log("Inside server's BODYPROFILE API");
+	res.render("bodyprofile");
+}
+
+
+
 //This API renders INDEX page on LOGOUT
 
 function logout(req, res){
@@ -193,9 +203,10 @@ function calculateCalorieProfile(weight, height, age, gender, exerciseType, goal
 	/*****************************************************************************************/
 	
 	// SECOND - Calculate Current Calorie Consumption 
-	
+	console.log("hi..." + exerciseType);
 	if (exerciseType === "A") // Little to no exercise
 	{
+		console.log("Hello.....");
 		currentCalorie = BMR * 1.2;
 	}
 	
@@ -257,7 +268,7 @@ function calculateCalorieProfile(weight, height, age, gender, exerciseType, goal
 
 //This function creates user's Body Profile.
 // Take care of parseInt and parseFloat
-
+/*
 function createBodyProfile(req, res){
 	
 	var bodyProfileInfo, queryString;
@@ -296,6 +307,7 @@ function createBodyProfile(req, res){
 	
 		
 }
+*/
 
 //This function updates user's Body Profile.
 // Do not allow user to change the gender
@@ -495,6 +507,112 @@ function getTodayCalories (req, res){
 }
 
 
+//This API pulls food details from FOOD_DB
+
+function getFoodDetails (req, res){
+
+	var queryString;
+	var foodName = {}; 
+	
+	console.log("Inside Server's GETFOODDETAILS function...");
+		
+	foodName = req.body;
+	
+	queryString = "SELECT * FROM food_db WHERE food_name = '" + foodName.food_name + "'";
+	
+	console.log("FOOD_DB SELECT Query is: "+ queryString);
+	
+	
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{				
+			console.log("Food Details fetched successfully!!!");
+			res.end(JSON.stringify(results));
+					
+		}	
+		
+	},queryString);
+
+}
+
+
+//This API updates user's catalog with food / exercise
+
+function addToCatalog (req, res){
+
+	var queryString;
+	var catalog = {}; 
+	
+	console.log("Inside Server's ADDTOCATALOG function...");
+		
+	catalog = req.body;
+	
+	queryString = "INSERT INTO user_food_exercise_log (emailid, log_name, log_type, log_day, log_calories) VALUES " +
+				  "('" + req.session.emailid + "', '" + catalog.log_name + "', '" + catalog.log_type + "', CURDATE(), '" + catalog.log_calories + "')";  
+	
+	console.log("Add To Catalog INSERT Query is: "+ queryString);
+	
+	
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{				
+			console.log("Row inserted to user's catalog successfully!!!");
+			res.end();
+					
+		}	
+		
+	},queryString);
+
+}
+
+
+//This API creates user's body profile
+
+function createBodyProfile (req, res){
+
+	var queryString;
+	var bodyProfile = {}, calculatedProfile = {};; 
+	
+	console.log("Inside Server's CREATEBODYPROFILE function...");
+		
+	bodyProfile = req.body;
+	
+	calculatedProfile = calculateCalorieProfile(parseFloat(bodyProfile.weight), parseFloat(bodyProfile.height), parseInt(bodyProfile.age), bodyProfile.gender, bodyProfile.activity, bodyProfile.goalWeight, bodyProfile.goalDays);
+	
+	queryString = "INSERT INTO user_body_profile (emailid, gender, current_weight, current_height, goal_weight, goal_days, exercise_type, age, " +
+				  "bmr, current_calorie, target_calorie) VALUES " +
+				  "('" + req.session.emailid + "', '" + bodyProfile.gender + "', '" + bodyProfile.weight + "', '" + bodyProfile.height + "', '" +
+				  bodyProfile.goalWeight + "', '"  + bodyProfile.goalDays + "', '" + bodyProfile.activity + "', '" + bodyProfile.age + "', '" + 
+				  calculatedProfile.bmr + "', '" + calculatedProfile.currentCalorie + "', '" + calculatedProfile.goalCalorieDaily + "')";
+		
+	console.log("BodyProfile INSERT Query is: "+ queryString);
+	
+	
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{				
+			console.log("Row inserted to user's catalog successfully!!!");
+			res.end();
+					
+		}	
+		
+	},queryString);
+
+}
+
+
 
 // Rendering Pages APIs
 
@@ -503,6 +621,7 @@ exports.login=login;
 exports.signup=signup;
 exports.home=home;
 exports.foodlog=foodlog;
+exports.bodyprofile=bodyprofile;
 exports.logout=logout;
 
 // Business Logic APIs
@@ -516,3 +635,6 @@ exports.userFoodLog=userFoodLog;
 exports.userProfile=userProfile;
 exports.getGoalCalories=getGoalCalories;
 exports.getTodayCalories=getTodayCalories;
+exports.getFoodDetails=getFoodDetails;
+exports.addToCatalog=addToCatalog;
+exports.createBodyProfile=createBodyProfile;

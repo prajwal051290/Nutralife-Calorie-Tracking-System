@@ -111,7 +111,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Food Database
+                            Food / Exercise Database
                         </h1>
                         
                     </div>
@@ -126,9 +126,7 @@
 	                	
 	                		<button class="btn btn-primary" ng-click="searchFoodDb()">Search Our Food Database</button>
 	                		
-	                		<br> a <br> a <br> a <br>a <br>a <br>a <br>a <br>a <br>a <br>a <br>a <br>a <br>
-	                		a <br> a <br> a <br>a <br>a <br>a <br>a <br>a <br>a <br> 
-	                		                		    
+	                		 	                		                		    
 	                    </div>
 	                    
 	                    <div class="col-lg-6 col-md-12">
@@ -148,37 +146,126 @@
                
                			<div class="row">
 	                
-	                    <div class="col-lg-6 col-md-12">
-	                	
-	                		<div class="input-group">
-	                		
-      							<span class="input-group-btn">
-        							<button class="btn btn-default" type="button">Go!</button>
-      							</span>
-      							
-      							<input type="text" class="form-control" placeholder="Search food by name...">
-      							
-    						</div><!-- /input-group --> 
-	                		                		    
-	                    </div>
+		                    <div class="col-lg-6 col-md-12">
+		                	
+		                		<div class="input-group">
+		                		
+	      							<span class="input-group-btn">
+	        							<button class="btn btn-default" type="button" ng-click="getFoodDetails()">Go!</button>
+	      							</span>
+	      							
+	      							<input type="text" class="form-control" placeholder="Search food by name..." ng-model="food">
+	      							
+	    						</div><!-- /input-group --> 
+		                		                		    
+		                    </div>
+		                    
+		                    <div class="col-lg-6 col-md-12">
+		                
+		                		<div class="input-group">
+		                		
+	      							<span class="input-group-btn">
+	        							<button class="btn btn-default" type="button" ng-click="getExerciseDetails()">Go!</button>
+	      							</span>
+	      							
+	      							<input type="text" class="form-control" placeholder="Search exercise by name..." ng-model="exercise">
+	      							
+	    						</div><!-- /input-group -->
+		                        
+		                    </div>
 	                    
-	                    <div class="col-lg-6 col-md-12">
-	                
-	                		<div class="input-group">
+	              		</div>
+	              		
+	              		<br>
+	              		
+	              		<!--
+	              		
+	              		<div class="row">
+	              		
+	              			<div ng-show="foodname">
+	              			
+		              			<div class="col-lg-3 col-md-6">
+		                		 	{{foodName}}
+		                		</div>
+		                		 
+		                		<div class="col-lg-3 col-md-6">
+		                		 	<button class="btn btn-primary" type="button" ng-click="showFoodDetails()">Show Details</button>
+		                		</div>
+		                		
+	                		</div>
 	                		
-      							<span class="input-group-btn">
-        							<button class="btn btn-default" type="button">Go!</button>
-      							</span>
-      							
-      							<input type="text" class="form-control" placeholder="Search exercise by name...">
-      							
-    						</div><!-- /input-group -->
-	                        
-	                    </div>
-	                    
-	              	</div>
+	                		<div ng-show="exercisename">
+	                		
+		                		<div class="col-lg-3 col-md-6">
+		                		 	{{exerciseName}}
+		                		</div>
+		                		 
+		                		<div class="col-lg-3 col-md-6">
+		                		 	<button class="btn btn-primary" type="button" ng-click="showExerciseDetails()">Show Details</button>
+		                		</div>
+	                		
+	                		</div>
+	                		 
+	              		</div>
+	              		
+	              		-->
+	              		
+	              		<br>
+	              		
+	              		<div class="row">
+	              		
+		              		<div ng-show="foodtable">
+		              		
+		              			<div class="col-lg-6 col-md-12">
+		                		 	
+		                		 	Detailed Composition for <strong>{{foodName}}</strong>
+		                		 	
+		                			<table class="table">
+		                			
+										<tbody>
+									    
+									      <tr class="success">
+									        <td>Solid Fats</td>
+									        <td>{{solid_fats}} g</td>
+									      </tr>
+									      
+									      <tr class="success">
+									        <td>Added Sugar</td>
+									        <td>{{added_sugar}} g</td>
+									      </tr>
+									      
+									      <tr class="success">
+									        <td>Saturated Fats</td>
+									        <td>{{saturated_fats}} g</td>
+									      </tr>
+									      
+									      <tr class="success">
+									        <td>Calories</td>
+									        <td>{{food_calories}}</td>
+									      </tr>
+									      
+									      
+									    </tbody>
+									    
+	  								</table>
+		                		 	
+		                		</div>
+	                		
+	                		</div>
+	                		
+	                		<div class="row">
+	                		
+	                			<div class="col-lg-6 col-md-12">
+	                				
+	                				<button class="btn btn-primary" type="button" ng-click="addFoodCatalog()">Add Food To My Catalog</button>
+	                				
+	                			</div>
+	                			
+	                		</div>
+	                		 
+	                	</div>
                
-               </div>
+               	</div>
               
     	      </div>
     	      
@@ -214,13 +301,109 @@
   		
   			$scope.foodlog1 = true;
   			$scope.foodlog2 = false;
-  		
+  			//$scope.foodname = false;
+  			//$scope.exercisename = false;
+  			$scope.foodtable = false;
+  			
+  			var foodDetails = [];
+  			var exerciseDetails = [];
+  			
   		$scope.searchFoodDb = function(){
   		
+  			$scope.foodlog2 = true;
+  			
   			$scope.foodlog1 = false;
-  			$scope.foodlog2 = true; 
+  			//$scope.foodname = false;
+  			//$scope.exercisename = false;
+  			$scope.foodtable = false;
   			
   		}
+  		
+  		/* Get food details from FOOD_DB */
+  		
+  		$scope.getFoodDetails = function(){
+  		
+  			var foodName = {};
+  			//$scope.foodname = true;
+  			$scope.foodtable = true;
+  			
+  			foodName = {"food_name": $scope.food};
+  			$http.post("/getFoodDetails", foodName)
+				.success(function(data) {
+				
+					console.log("Success returned from GETFOODDETAILS function");
+					$scope.foodName = $scope.food;
+					//foodDetails = data.slice(0);
+					$scope.solid_fats = data[0].solid_fats;
+					$scope.added_sugar = data[0].added_sugar;
+					$scope.saturated_fats = data[0].saturated_fats;
+					$scope.food_calories = data[0].calories;
+									
+				})
+  			  			
+  		}
+  		
+  		/* Get exercise details from FOOD_DB */
+  		
+  		$scope.getExerciseDetails = function(){
+  		
+  			$scope.exercisename = true;
+  			
+  			$http.post("/getExerciseDetails", exerciseName)
+				.success(function(data) {
+					console.log("Success returned from GETEXERCISEDETAILS function");
+					$scope.exerciseName = $scope.exercise;
+					exerciseDetails = data.slice(0);				
+				})
+  			  			
+  		}
+  		
+  		 
+  		/* Below 2 functions needed...
+  		 
+  		$scope.showFoodDetails = function(){
+  		
+			console.log("In SHOWFOODDETAILS function");
+		
+			$scope.foodtable = true;
+			
+			console.log(foodDetails);
+			$scope.solid_fats = foodDetails[0].solid_fats;
+			$scope.added_sugar = foodDetails[0].added_sugar;
+			$scope.saturated_fats = foodDetails[0].saturated_fats;
+			$scope.calories = foodDetails[0].calories;
+														
+		}
+  		
+  		
+  		
+  		$scope.showExerciseDetails = function(){
+  		
+  			$http.post("/getExerciseDetails", exerciseName)
+				.success(function(data) {
+					console.log("Success returned from SHOWEXERCISEDETAILS function");
+					exerciseDetails = data.slice(0);				
+				})
+  			  			
+  		}
+  		
+  		*/
+  		
+  		
+  		$scope.addFoodCatalog = function(){
+  		
+  			var catalogDetails = {};
+  			
+  			console.log("Inside addFoodCatalog() function");
+  			
+  			catalogDetails = {"log_name": $scope.food, "log_type": "F", "log_calories": $scope.food_calories};
+  			
+  			$http.post("/addToCatalog", catalogDetails)
+				.success(function(data) {
+					console.log("Success returned from ADDFOODCATALOG function");	
+				})
+  			  			
+  		} 
   		 		
   	}
   		

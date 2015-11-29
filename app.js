@@ -51,6 +51,8 @@ app.get('/foodlog', routes.foodlog);
 app.get('/logout', routes.logout);
 
 app.get('/userProfile', routes.userProfile);
+app.get('/bodyprofile', routes.bodyprofile);
+
 app.get('/getGoalCalories', routes.getGoalCalories);
 app.get('/getTodayCalories', routes.getTodayCalories);
 
@@ -59,7 +61,9 @@ app.get('/getTodayCalories', routes.getTodayCalories);
 
 app.post('/newaccount', routes.newAccount);
 app.post('/signin', routes.signIn);
-
+app.post('/getFoodDetails', routes.getFoodDetails);
+app.post('/addToCatalog', routes.addToCatalog);
+app.post('/createBodyProfile', routes.createBodyProfile);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Nutralife server listening on port " + app.get('port'));
