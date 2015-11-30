@@ -78,6 +78,10 @@ app.post('/addToExerciseCatalog', routes.addToExerciseCatalog);
 
 app.post('/createBodyProfile', routes.createBodyProfile);
 
+
+app.post('/sendEmail', routes.sendEmail);
+
+
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Nutralife server listening on port " + app.get('port'));
 });

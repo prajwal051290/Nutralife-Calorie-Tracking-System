@@ -5,6 +5,7 @@
 
 var queryExec = require("./queryExecutor");
 var ejs = require("ejs");
+var nodemailer = require('nodemailer'); // Mail Service
 
 //This API renders INDEX page
 
@@ -888,6 +889,61 @@ function getDailyBurnedCalories (req, res){
 }
 
 
+
+
+// Testing Email Service
+
+function sendEmail (req, res){
+
+		//create reusable transporter object using SMTP transport
+		var transporter = nodemailer.createTransport({
+		 service: 'Yahoo',
+		 auth: {
+		     user: 'prajwal_kondawar@yahoo.co.in',
+		     pass: 'Legerdeain'
+		 }
+		});
+		
+		/*user: 'pk.kondawar@gmail.com',
+	     pass: 'c-/\/\@!lp@$$w0r|)'*/
+		
+		//NB! No need to recreate the transporter object. You can use
+		//the same transporter object for all e-mails
+		
+		//setup e-mail data with unicode symbols
+		var mailOptions = {
+		 from: 'F ✔ <prajwal_kondawar@yahoo.co.in>', // sender address
+		 to: 'pk.kondawar@gmail.com', // list of receivers
+		 subject: 'Hello ✔', // Subject line
+		 text: 'Hello world ✔', // plaintext body
+		 html: '<b>Hello world ✔</b>' // html body
+		};
+		
+		//send mail with defined transport object
+		transporter.sendMail(mailOptions, function(error, info){
+		 if(error){
+		     return console.log(error);
+		 }
+		 console.log('Message sent: ' + info.response);
+		 console.log('Information: ' + info);
+		});
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Rendering Pages APIs
 
 exports.index=index;
@@ -927,3 +983,5 @@ exports.getBodyProfile=getBodyProfile;
 
 exports.getDailyConsumedCalories=getDailyConsumedCalories;
 exports.getDailyBurnedCalories=getDailyBurnedCalories;
+
+exports.sendEmail=sendEmail;
