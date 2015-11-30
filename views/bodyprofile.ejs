@@ -75,20 +75,22 @@
             
                 <ul class="nav navbar-nav side-nav">
                 
-                    <li class="active">
-                        <a href="home"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                    </li>
-                    
                     <li>
                         <a href="bodyprofile"><i class="fa fa-fw fa-edit"></i> Body Profile</a>
                     </li>
                     
                     <li>
-                        <a href="foodlog"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>
+                        <a href="" ng-click="alertBodyProfile()"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
                     
                     <li>
-                        <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Reports</a>
+                        <!--<a href="foodlog"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>-->
+                        <a href="" ng-click="alertBodyProfile1()"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="" ng-click="alertBodyProfile2()"><i class="fa fa-fw fa-bar-chart-o"></i> Reports</a>
                     </li>
                     
                     
@@ -238,6 +240,65 @@
 					console.log("Success returned from CREATEBODYPROFILE function");
 			})
   		}
+  		
+  		
+  		// Dashboard
+  		$scope.alertBodyProfile = function(){
+  			
+  			$http.get("/getBodyProfile")
+				.success(function(data) {
+					console.log("Success returned from getBodyProfile function");
+					
+					if (data.status == 300){
+						alert("Please Complete Your Body Profile!!!");
+						window.location.assign('bodyprofile');
+					}else if (data.status == 200){
+						window.location.assign('home');
+					}
+					
+				})
+				
+   		}
+   		
+   		
+   		// Food Exercise
+   		$scope.alertBodyProfile1 = function(){
+  			
+  			$http.get("/getBodyProfile")
+				.success(function(data) {
+					console.log("Success returned from getBodyProfile function");
+					
+					if (data.status == 300){
+						alert("Please Complete Your Body Profile!!!");
+						window.location.assign('bodyprofile');
+					}else if (data.status == 200){
+						console.log(temp);
+						//window.location.assign('foodlog');
+					}
+					
+				})
+				
+   		}
+   		
+   		
+   		// Reports
+   		$scope.alertBodyProfile2 = function(){
+  			
+  			$http.get("/getBodyProfile")
+				.success(function(data) {
+					console.log("Success returned from getBodyProfile function");
+					
+					if (data.status == 300){
+						alert("Please Complete Your Body Profile!!!");
+						window.location.assign('bodyprofile');
+					}else if (data.status == 200){
+						window.location.assign('graph');
+					}
+					
+				})
+				
+   		}
+  		
   		
   	}
   		

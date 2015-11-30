@@ -56,6 +56,7 @@ app.get('/bodyprofile', routes.bodyprofile);
 app.get('/getGoalCalories', routes.getGoalCalories);
 app.get('/getTodayCalories', routes.getTodayCalories);
 
+app.get('/getBodyProfile', routes.getBodyProfile);
 
 /********* POST REQUESTS *************/
 

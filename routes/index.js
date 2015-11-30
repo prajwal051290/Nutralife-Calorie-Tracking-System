@@ -19,7 +19,17 @@ function index (req, res) {
 function login(req, res){
 
 	console.log("Inside server's LOGIN API");
-	res.render("login");
+	
+	if (req.session.emailid){
+		
+		res.render("bodyprofile");
+		
+	}else{
+		
+		res.render("login");
+		
+	}
+	
 }
 
 
@@ -28,7 +38,17 @@ function login(req, res){
 function signup(req, res){
 	
 	console.log("Inside server's SIGNUP API");
-	res.render("signup");
+	
+	if (req.session.emailid){
+		
+		res.render("bodyprofile");
+		
+	}else{
+		
+		res.render("signup");
+		
+	}
+	
 }
 
 //This API renders HOME page
@@ -36,7 +56,18 @@ function signup(req, res){
 function home(req, res){
 
 	console.log("Inside server's HOME API");
-	res.render("home");
+	
+	if (req.session.emailid){
+		
+		res.render("home");
+		
+	}else{
+		
+		res.render("index");
+		
+	}
+	
+	
 }
 
 
@@ -45,7 +76,17 @@ function home(req, res){
 function foodlog(req, res){
 
 	console.log("Inside server's FOODLOG API");
-	res.render("foodlog");
+	
+	if (req.session.emailid){
+		
+		res.render("foodlog");
+		
+	}else{
+		
+		res.render("index");
+		
+	}
+	
 }
 
 //This API renders BODYPROFILE page
@@ -53,12 +94,22 @@ function foodlog(req, res){
 function bodyprofile(req, res){
 
 	console.log("Inside server's BODYPROFILE API");
-	res.render("bodyprofile");
+	
+	if (req.session.emailid){
+		
+		res.render("bodyprofile");
+		
+	}else{
+		
+		res.render("index");
+		
+	}
+	
 }
 
 
 
-//This API renders INDEX page on LOGOUT
+// This API renders INDEX page on LOGOUT
 
 function logout(req, res){
 
@@ -174,6 +225,7 @@ function signIn(req, res){
  
  1. Target Weight > Current Weight 
  2. Target Weight < Current Weight
+ 3. Target Weight = Current Weight (Already reached Goal)
  
  */
 
@@ -384,7 +436,7 @@ function userFoodLog (req, res){
 
 }
 
-//This API pulls user's profile
+//This API pulls user's profile - To show at the top of the page
 
 function userProfile (req, res){
 
@@ -614,6 +666,48 @@ function createBodyProfile (req, res){
 
 
 
+// This API checks if User's Body Profile was created. It is must to use the system's other features
+
+function getBodyProfile (req, res){
+
+	var queryString;
+	var response;
+	
+	console.log("Inside Server's getBodyProfile function...");
+		
+	//bodyProfile = req.body;
+	
+	queryString = "SELECT * FROM user_body_profile WHERE emailid = '" + req.session.emailid + "'";	
+	console.log("getBodyProfile SELECT Query is: "+ queryString);
+		
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{				
+			if (results.length > 0){
+				
+				console.log("User' Body Profile is present in the system");
+				response = {status:200, results: results};
+				res.end(JSON.stringify(response));
+				
+			}else{
+				
+				console.log("User' Body Profile is not present in the system");
+				response = {status:300};
+				res.end(JSON.stringify(response));
+				
+			}
+					
+		}	
+		
+	},queryString);
+
+}
+
+
 // Rendering Pages APIs
 
 exports.index=index;
@@ -628,13 +722,18 @@ exports.logout=logout;
 
 exports.newAccount=newAccount;
 exports.signIn=signIn;
+
 exports.createBodyProfile=createBodyProfile;
 exports.updateBodyProfile=updateBodyProfile;
+
 exports.searchFoodDB=searchFoodDB;
 exports.userFoodLog=userFoodLog;
 exports.userProfile=userProfile;
+exports.createBodyProfile=createBodyProfile;
+
 exports.getGoalCalories=getGoalCalories;
 exports.getTodayCalories=getTodayCalories;
 exports.getFoodDetails=getFoodDetails;
 exports.addToCatalog=addToCatalog;
-exports.createBodyProfile=createBodyProfile;
+
+exports.getBodyProfile=getBodyProfile;
