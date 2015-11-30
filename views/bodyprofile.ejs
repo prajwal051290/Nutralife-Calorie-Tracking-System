@@ -84,9 +84,7 @@
                     </li>
                     
                     <li>
-                        <!--<a href="foodlog"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>-->
                         <a href="" ng-click="alertBodyProfile1()"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>
-                        
                     </li>
                     
                     <li>
@@ -95,7 +93,7 @@
                     
                     
                     <li>
-                        <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> About Us</a>
+                        <a href="#"><i class="fa fa-fw fa-desktop"></i> About Us</a>
                     </li>
                     
                     
@@ -250,10 +248,13 @@
 					console.log("Success returned from getBodyProfile function");
 					
 					if (data.status == 300){
+					
 						alert("Please Complete Your Body Profile!!!");
-						window.location.assign('bodyprofile');
+						
 					}else if (data.status == 200){
+					
 						window.location.assign('home');
+						
 					}
 					
 				})
@@ -269,11 +270,14 @@
 					console.log("Success returned from getBodyProfile function");
 					
 					if (data.status == 300){
+					
 						alert("Please Complete Your Body Profile!!!");
-						window.location.assign('bodyprofile');
+						
+						
 					}else if (data.status == 200){
-						console.log(temp);
-						//window.location.assign('foodlog');
+					
+						window.location.assign('foodlog');
+						
 					}
 					
 				})
@@ -289,10 +293,13 @@
 					console.log("Success returned from getBodyProfile function");
 					
 					if (data.status == 300){
+					
 						alert("Please Complete Your Body Profile!!!");
-						window.location.assign('bodyprofile');
+					
 					}else if (data.status == 200){
+					
 						window.location.assign('graph');
+						
 					}
 					
 				})

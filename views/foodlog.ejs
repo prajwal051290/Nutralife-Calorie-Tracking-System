@@ -80,22 +80,20 @@
                     </li>
                     
                     <li>
-                        <a href="" ng-click="alertBodyProfile()"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="home"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
                     
                     <li>
-                        <!--<a href="foodlog"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>-->
-                        <a href="" ng-click="alertBodyProfile1()"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>
-                        
+                    	<a href="foodlog"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>
                     </li>
                     
                     <li>
-                        <a href="" ng-click="alertBodyProfile2()"><i class="fa fa-fw fa-bar-chart-o"></i> Reports</a>
+                        <a href="graph"><i class="fa fa-fw fa-bar-chart-o"></i> Reports</a>
                     </li>
                     
                     
                     <li>
-                        <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> About Us</a>
+                        <a href="#"><i class="fa fa-fw fa-desktop"></i> About Us</a>
                     </li>
                     
                     
@@ -120,33 +118,7 @@
                 </div>
                 <!-- /.row -->
 				
-				<div ng-show="foodlog1">
-				
-	                <div class="row">
-	                
-	                    <div class="col-lg-6 col-md-12">
-	                	
-	                		<button class="btn btn-primary" ng-click="searchFoodDb()">Search Our Food Database</button>
-	                		
-	                		 	                		                		    
-	                    </div>
-	                    
-	                    <div class="col-lg-6 col-md-12">
-	                
-	                		<button class="btn btn-success" ng-click="getFoodExercise()">Today's Food & Exercise</button>
-	                		
-	                		<br> a <br> a <br> a <br>a <br>a <br>a <br>a <br>a <br>a <br>a <br>a <br>a <br>
-	                		a <br> a <br> a <br>a <br>a <br>a <br>a <br>a <br>a <br>
-	                        
-	                    </div>
-	                    
-	              	</div>
-	              	
-               </div>
-               
-               <div ng-show="foodlog2">
-               
-               			<div class="row">
+						<div class="row">
 	                
 		                    <div class="col-lg-6 col-md-12">
 		                	
@@ -177,42 +149,10 @@
 		                    </div>
 	                    
 	              		</div>
-	              		
-	              		<br>
-	              		
-	              		<!--
-	              		
-	              		<div class="row">
-	              		
-	              			<div ng-show="foodname">
-	              			
-		              			<div class="col-lg-3 col-md-6">
-		                		 	{{foodName}}
-		                		</div>
-		                		 
-		                		<div class="col-lg-3 col-md-6">
-		                		 	<button class="btn btn-primary" type="button" ng-click="showFoodDetails()">Show Details</button>
-		                		</div>
-		                		
-	                		</div>
-	                		
-	                		<div ng-show="exercisename">
-	                		
-		                		<div class="col-lg-3 col-md-6">
-		                		 	{{exerciseName}}
-		                		</div>
-		                		 
-		                		<div class="col-lg-3 col-md-6">
-		                		 	<button class="btn btn-primary" type="button" ng-click="showExerciseDetails()">Show Details</button>
-		                		</div>
-	                		
-	                		</div>
-	                		 
-	              		</div>
-	              		
-	              		-->
-	              		
-	              		<br>
+               
+               <div ng-show="foodlog2">
+               
+               		    <br>
 	              		
 	              		<div class="row">
 	              		
@@ -266,12 +206,72 @@
                 			</div>
                 			
                 		</div>
+                		
+                		<div class="row">
+                		
+                			<div class="col-lg-6 col-md-12">
+                				
+                				<strong>{{foodLogStatus}}</strong>
+                				
+                			</div>
+                			
+                		</div>
 	                		 
-	                	</div>
+	               </div> <!-- END OF FOODLOG2 -->
+	               
+	               
+	               <div ng-show="foodlog3">
                
-               	</div>
-              
-    	      </div>
+               		    <br>
+	              		
+	              		<div class="row">
+	              		
+	              			<div class="col-lg-6 col-md-12">
+		                		 	
+	                		 	Calories burned with <strong>{{exerciseName}}</strong> per minute: <strong>{{calories}}</strong>
+		                		 	
+	                		</div>
+	                		
+                		</div>
+                		
+                		<br>
+                		
+                		<div class="row">
+                		
+                			<div class="col-lg-6 col-md-12">
+                				
+                				How long did you exercise? <input type="number" placeholder="Enter Time in Minutes" required="" autofocus="" ng-model="time">
+                				
+                			</div>
+                			
+                		</div>
+	                		
+	                	<br>	
+	                		
+                		<div class="row">
+                		
+                			<div class="col-lg-6 col-md-12">
+                				
+                				<button class="btn btn-primary" type="button" ng-click="addExerciseCatalog()">Add Exercise To My Catalog</button>
+                				
+                			</div>
+                			
+                		</div>
+                		
+                		<div class="row">
+                		
+                			<div class="col-lg-6 col-md-12">
+                				
+                				<strong>{{exerciseLogStatus}}</strong>
+                				
+                			</div>
+                			
+                		</div>
+	                		 
+	               </div> <!-- END OF FOODLOG3 -->
+	               
+               
+	   	      </div>
     	      
             <!-- /.container-fluid -->
 
@@ -303,90 +303,22 @@
 			
 	function foodLogOperations($scope, $http) {
   		
-  			$scope.foodlog1 = true;
   			$scope.foodlog2 = false;
-  			//$scope.foodname = false;
-  			//$scope.exercisename = false;
+  			$scope.foodlog3 = false;
   			$scope.foodtable = false;
   			
   			var foodDetails = [];
   			var exerciseDetails = [];
   			
-  		
-  		// Dashboard
-  		$scope.alertBodyProfile = function(){
-  			
-  			$http.get("/getBodyProfile")
-				.success(function(data) {
-					console.log("Success returned from getBodyProfile function");
-					
-					if (data.status == 300){
-						alert("Please Complete Your Body Profile!!!");
-						window.location.assign('bodyprofile');
-					}else if (data.status == 200){
-						window.location.assign('home');
-					}
-					
-				})
-				
-   		}
-   		
-   		
-   		// Food Exercise
-   		$scope.alertBodyProfile1 = function(){
-  			
-  			$http.get("/getBodyProfile")
-				.success(function(data) {
-					console.log("Success returned from getBodyProfile function");
-					
-					if (data.status == 300){
-						alert("Please Complete Your Body Profile!!!");
-						window.location.assign('bodyprofile');
-					}else if (data.status == 200){
-						console.log(temp);
-						//window.location.assign('foodlog');
-					}
-					
-				})
-				
-   		}
-   		
-   		
-   		// Reports
-   		$scope.alertBodyProfile2 = function(){
-  			
-  			$http.get("/getBodyProfile")
-				.success(function(data) {
-					console.log("Success returned from getBodyProfile function");
-					
-					if (data.status == 300){
-						alert("Please Complete Your Body Profile!!!");
-						window.location.assign('bodyprofile');
-					}else if (data.status == 200){
-						window.location.assign('graph');
-					}
-					
-				})
-				
-   		}
-  		
-  		$scope.searchFoodDb = function(){
-  		
-  			$scope.foodlog2 = true;
-  			
-  			$scope.foodlog1 = false;
-  			//$scope.foodname = false;
-  			//$scope.exercisename = false;
-  			$scope.foodtable = false;
-  			
-  		}
-  		
   		/* Get food details from FOOD_DB */
   		
   		$scope.getFoodDetails = function(){
   		
   			var foodName = {};
-  			//$scope.foodname = true;
+  			
+  			$scope.foodlog3 = false;
+  			
+  			$scope.foodlog2 = true;
   			$scope.foodtable = true;
   			
   			foodName = {"food_name": $scope.food};
@@ -395,7 +327,6 @@
 				
 					console.log("Success returned from GETFOODDETAILS function");
 					$scope.foodName = $scope.food;
-					//foodDetails = data.slice(0);
 					$scope.solid_fats = data[0].solid_fats;
 					$scope.added_sugar = data[0].added_sugar;
 					$scope.saturated_fats = data[0].saturated_fats;
@@ -405,53 +336,28 @@
   			  			
   		}
   		
-  		/* Get exercise details from FOOD_DB */
+  		/* Get exercise details from EXERCISE_DB */
   		
   		$scope.getExerciseDetails = function(){
   		
-  			$scope.exercisename = true;
+  			$scope.foodlog2 = false;
+  			$scope.foodtable = false;
   			
+  			$scope.foodlog3 = true;
+  			  		
+  			var exerciseName = {};
+  			exerciseName = {"exercise_name": $scope.exercise};
+  			  			
   			$http.post("/getExerciseDetails", exerciseName)
 				.success(function(data) {
 					console.log("Success returned from GETEXERCISEDETAILS function");
 					$scope.exerciseName = $scope.exercise;
-					exerciseDetails = data.slice(0);				
+					$scope.calories = data[0].calories;				
 				})
   			  			
   		}
   		
   		 
-  		/* Below 2 functions needed...
-  		 
-  		$scope.showFoodDetails = function(){
-  		
-			console.log("In SHOWFOODDETAILS function");
-		
-			$scope.foodtable = true;
-			
-			console.log(foodDetails);
-			$scope.solid_fats = foodDetails[0].solid_fats;
-			$scope.added_sugar = foodDetails[0].added_sugar;
-			$scope.saturated_fats = foodDetails[0].saturated_fats;
-			$scope.calories = foodDetails[0].calories;
-														
-		}
-  		
-  		
-  		
-  		$scope.showExerciseDetails = function(){
-  		
-  			$http.post("/getExerciseDetails", exerciseName)
-				.success(function(data) {
-					console.log("Success returned from SHOWEXERCISEDETAILS function");
-					exerciseDetails = data.slice(0);				
-				})
-  			  			
-  		}
-  		
-  		*/
-  		
-  		
   		$scope.addFoodCatalog = function(){
   		
   			var catalogDetails = {};
@@ -462,11 +368,30 @@
   			
   			$http.post("/addToCatalog", catalogDetails)
 				.success(function(data) {
-					console.log("Success returned from ADDFOODCATALOG function");	
+					console.log("Success returned from ADDFOODCATALOG function");
+					$scope.foodLogStatus = "YOUR FOOD LOGGED SUCCESSFULLY!!!";	
 				})
   			  			
-  		} 
-  		 		
+  		}
+  		
+  		
+  		$scope.addExerciseCatalog = function(){
+  		
+  			var catalogDetails = {};
+  			
+  			console.log("Inside addExerciseCatalog() function");
+  			
+  			catalogDetails = {"log_name": $scope.exercise, "log_type": "E", "log_calories": $scope.calories, "exercise_time": $scope.time};
+  			
+  			$http.post("/addToExerciseCatalog", catalogDetails)
+				.success(function(data) {
+					console.log("Success returned from ADDFOODCATALOG function");
+					$scope.exerciseLogStatus = "YOUR EXERCISE LOGGED SUCCESSFULLY!!!";	
+				})
+  			  			
+  		}
+  		
+  		  		 		
   	}
   		
 	</script>

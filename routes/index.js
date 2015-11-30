@@ -592,7 +592,41 @@ function getFoodDetails (req, res){
 }
 
 
-//This API updates user's catalog with food / exercise
+//This API pulls food details from FOOD_DB
+
+function getExerciseDetails (req, res){
+
+	var queryString;
+	var exerciseName = {}; 
+	
+	console.log("Inside Server's GETEXERCISEDETAILS function...");
+		
+	exerciseName = req.body;
+	
+	queryString = "SELECT * FROM exercise_db WHERE exercise_name = '" + exerciseName.exercise_name + "'";
+	
+	console.log("EXERCISE_DB SELECT Query is: "+ queryString);
+	
+	
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{				
+			console.log("Exercise Details fetched successfully!!!");
+			res.end(JSON.stringify(results));
+					
+		}	
+		
+	},queryString);
+
+}
+
+
+
+//This API updates user's catalog with food
 
 function addToCatalog (req, res){
 
@@ -607,6 +641,43 @@ function addToCatalog (req, res){
 				  "('" + req.session.emailid + "', '" + catalog.log_name + "', '" + catalog.log_type + "', CURDATE(), '" + catalog.log_calories + "')";  
 	
 	console.log("Add To Catalog INSERT Query is: "+ queryString);
+	
+	
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{				
+			console.log("Row inserted to user's catalog successfully!!!");
+			res.end();
+					
+		}	
+		
+	},queryString);
+
+}
+
+
+
+//This API updates user's catalog with Exercise
+
+function addToExerciseCatalog (req, res){
+
+	var queryString;
+	var catalog = {}; 
+	
+	console.log("Inside Server's ADDTOEXERCISECATALOG function...");
+		
+	catalog = req.body;
+	
+	catalog.log_calories = catalog.log_calories * catalog.exercise_time;
+	
+	queryString = "INSERT INTO user_food_exercise_log (emailid, log_name, log_type, log_day, log_calories) VALUES " +
+				  "('" + req.session.emailid + "', '" + catalog.log_name + "', '" + catalog.log_type + "', CURDATE(), '" + catalog.log_calories + "')";  
+	
+	console.log("Add To Exercise Catalog INSERT Query is: "+ queryString);
 	
 	
 	queryExec.fetchData(function(err,results){
@@ -655,7 +726,7 @@ function createBodyProfile (req, res){
 		}
 		else 
 		{				
-			console.log("Row inserted to user's catalog successfully!!!");
+			console.log("Row inserted to user_body_profile successfully!!!");
 			res.end();
 					
 		}	
@@ -733,7 +804,11 @@ exports.createBodyProfile=createBodyProfile;
 
 exports.getGoalCalories=getGoalCalories;
 exports.getTodayCalories=getTodayCalories;
+
 exports.getFoodDetails=getFoodDetails;
+exports.getExerciseDetails=getExerciseDetails;
+
 exports.addToCatalog=addToCatalog;
+exports.addToExerciseCatalog=addToExerciseCatalog;
 
 exports.getBodyProfile=getBodyProfile;

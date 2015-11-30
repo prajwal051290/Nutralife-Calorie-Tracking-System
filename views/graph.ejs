@@ -1,172 +1,288 @@
+
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
 
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	
-	<title>NUTRALIFE</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-	
-	<link rel="stylesheet" href="../stylesheets/style.css" type="text/css" />
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> 
-	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	
-	<script src="http://www.amcharts.com/lib/3/amcharts.js"></script>
-<script src="http://www.amcharts.com/lib/3/serial.js"></script>
-<script src="http://www.amcharts.com/lib/3/themes/dark.js"></script>
-	
-	<!--<link rel="stylesheet" href="../public/stylesheets/style1.css" type="text/css" />-->
-	
-	<style>
-	#chartdiv {
-	width		: 100%;
-	height		: 435px;
-	font-size	: 11px;
-}
-	</style>
+    <title>Nutralife - Dashboard</title>
 
+    <!-- Bootstrap Core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/stylesheets/sb-admin.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="/stylesheets/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    
+    
 </head>
 
-<body>
+<body ng-app="graphAngular" ng-controller="graphController">
 
+	<div id="wrapper">
 
-<div id="chartdiv"></div>
-<!--
-<div class="container-fluid">
-  <div class="row text-center" style="overflow:hidden;">
-		<div class="col-sm-3" style="float: none !important;display: inline-block;">
-			<label class="text-left">Top Radius:</label>
-			<input class="chart-input" data-property="topRadius" type="range" min="0" max="1.5" value="1" step="0.01"/>
-		</div>
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">NUTRALIFE</a>
+            </div>
+            
+            <!-- Top Menu Items START -->
+            
+            <ul class="nav navbar-right top-nav">
+            	<li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{profile}} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    
+                        <li>
+                            <a href="/logout"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        </li>
+                        
+                    </ul>
+                </li>
+            </ul>
+            
+            <!-- Top Menu Items END -->
+            
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+            
+                <ul class="nav navbar-nav side-nav">
+                
+                    <li>
+                        <a href="bodyprofile"><i class="fa fa-fw fa-edit"></i> Body Profile</a>
+                    </li>
+                    
+                    <li>
+                        <a href="home"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    
+                    <li>
+                        <a href="foodlog"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>
+                    </li>
+                    
+                    <li>
+                        <a href="graph"><i class="fa fa-fw fa-bar-chart-o"></i> Reports</a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="#"><i class="fa fa-fw fa-desktop"></i> About Us</a>
+                    </li>
+                    
+                    
+                 </ul>
+                 
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
 
-		<div class="col-sm-3" style="float: none !important;display: inline-block;">
-			<label class="text-left">Angle:</label>
-			<input class="chart-input" data-property="angle" type="range" min="0" max="89" value="30" step="1"/>	
-		</div>
+        <div id="page-wrapper">
 
-		<div class="col-sm-3" style="float: none !important;display: inline-block;">
-			<label class="text-left">Depth:</label>
-			<input class="chart-input" data-property="depth3D" type="range" min="1" max="120" value="40" step="1"/>
-		</div>
-	</div>
--->
-</div>	
+            <div class="container-fluid">
 
-<script>
-var chart = AmCharts.makeChart("chartdiv", {
-    "theme": "light",
-    "type": "serial",
-	"startDuration": 2,
-    "dataProvider": [{
-        "country": "USA",
-        "visits": 4025,
-        "color": "#FF0F00"
-    }, {
-        "country": "China",
-        "visits": 1882,
-        "color": "#FF6600"
-    }, {
-        "country": "Japan",
-        "visits": 1809,
-        "color": "#FF9E01"
-    }, {
-        "country": "Germany",
-        "visits": 1322,
-        "color": "#FCD202"
-    }, {
-        "country": "UK",
-        "visits": 1122,
-        "color": "#F8FF01"
-    }, {
-        "country": "France",
-        "visits": 1114,
-        "color": "#B0DE09"
-    }, {
-        "country": "India",
-        "visits": 984,
-        "color": "#04D215"
-    }, {
-        "country": "Spain",
-        "visits": 711,
-        "color": "#0D8ECF"
-    }, {
-        "country": "Netherlands",
-        "visits": 665,
-        "color": "#0D52D1"
-    }, {
-        "country": "Russia",
-        "visits": 580,
-        "color": "#2A0CD0"
-    }, {
-        "country": "South Korea",
-        "visits": 443,
-        "color": "#8A0CCF"
-    }, {
-        "country": "Canada",
-        "visits": 441,
-        "color": "#CD0D74"
-    }, {
-        "country": "Brazil",
-        "visits": 395,
-        "color": "#754DEB"
-    }, {
-        "country": "Italy",
-        "visits": 386,
-        "color": "#DDDDDD"
-    }, {
-        "country": "Taiwan",
-        "visits": 338,
-        "color": "#333333"
-    }],
-    "valueAxes": [{
-        "position": "left",
-        "axisAlpha":0,
-        "gridAlpha":0         
-    }],
-    "graphs": [{
-        "balloonText": "[[category]]: <b>[[value]]</b>",
-        "colorField": "color",
-        "fillAlphas": 0.85,
-        "lineAlpha": 0.1,
-        "type": "column",
-        "topRadius":1,
-        "valueField": "visits"
-    }],
-    "depth3D": 40,
-	"angle": 30,
-    "chartCursor": {
-        "categoryBalloonEnabled": false,
-        "cursorAlpha": 0,
-        "zoomable": false
-    },    
-    "categoryField": "country",
-    "categoryAxis": {
-        "gridPosition": "start",
-        "axisAlpha":0,
-        "gridAlpha":0
-        
-    },
-    "export": {
-    	"enabled": true
-     }
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Calories <small>Daily Summary</small>
+                        </h1>
+                        
+                    </div>
+                </div>
+                <!-- /.row -->
 
-},0);
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-tasks fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">{{goal}}</div>
+                                        <div>Today's Goal!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-green">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-support fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">{{consumed}}</div>
+                                        <div>Consumed Today!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+               </div>
+               
+               <div class="row">
+               
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-yellow">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-tasks fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">{{burned}}</div>
+                                        <div>Burned Today!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-red">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-support fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">{{net}}</div>
+                                        <div>Net!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+                
+                
+                <div class="row">
+               
+                    <div class="col-lg-6 col-md-12">
+                        <div class="panel panel-yellow">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-shopping-cart fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">124</div>
+                                        <div>New Orders!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                </div>
+                <!-- /.row -->
+    	      </div>
+    	      
+            <!-- /.container-fluid -->
 
-jQuery('.chart-input').off().on('input change',function() {
-	var property	= jQuery(this).data('property');
-	var target		= chart;
-	chart.startDuration = 0;
+        </div>
+        <!-- /#page-wrapper -->
 
-	if ( property == 'topRadius') {
-		target = chart.graphs[0];
-	}
+    </div>
+    <!-- /#wrapper -->
 
-	target[property] = this.value;
-	chart.validateNow();
-});
-</script>
+    <!-- jQuery -->
+    <script src="/js/jquery.js"></script>
 
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <!--
+    <script src="../public/js/raphael.min.js"></script>
+    <script src="../public/js/morris.min.js"></script>
+    <script src="../public/js/morris-data.js"></script>
+	-->
+	
+	<script>
+  
+  	<!-- Controller Graph -->
+  	
+  	var graph = angular.module('graphAngular', []);
+	graph.controller('graphController', homeOperations); 
+			
+	function homeOperations($scope, $http) {
+  		
+  	}
+  		
+	</script>
+	
+	
 </body>
+
+</html>

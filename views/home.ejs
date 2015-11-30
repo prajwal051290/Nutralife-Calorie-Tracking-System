@@ -83,22 +83,20 @@
                     </li>
                     
                     <li>
-                        <a href="" ng-click="alertBodyProfile()"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="home"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
                     
                     <li>
-                        <!--<a href="foodlog"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>-->
-                        <a href="" ng-click="alertBodyProfile1()"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>
-                        
+                        <a href="foodlog"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>
                     </li>
                     
                     <li>
-                        <a href="" ng-click="alertBodyProfile2()"><i class="fa fa-fw fa-bar-chart-o"></i> Reports</a>
+                        <a href="graph"><i class="fa fa-fw fa-bar-chart-o"></i> Reports</a>
                     </li>
                     
                     
                     <li>
-                        <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> About Us</a>
+                        <a href="#"><i class="fa fa-fw fa-desktop"></i> About Us</a>
                     </li>
                     
                     
@@ -302,61 +300,6 @@
 			})
   				
   		})
-  		
-  		
-  		// Dashboard
-  		$scope.alertBodyProfile = function(){
-  			
-  			$http.get("/getBodyProfile")
-				.success(function(data) {
-					console.log("Success returned from getBodyProfile function");
-					
-					if (data.status == 300){
-						alert("Please Complete Your Body Profile!!!");
-					}else if (data.status == 200){
-						window.location.assign('home');
-					}
-					
-				})
-				
-   		}
-   		
-   		
-   		// Food Exercise
-   		$scope.alertBodyProfile1 = function(){
-  			
-  			$http.get("/getBodyProfile")
-				.success(function(data) {
-					console.log("Success returned from getBodyProfile function");
-					
-					if (data.status == 300){
-						alert("Please Complete Your Body Profile!!!");
-					}else if (data.status == 200){
-						console.log(temp);
-						//window.location.assign('foodlog');
-					}
-					
-				})
-				
-   		}
-   		
-   		
-   		// Reports
-   		$scope.alertBodyProfile2 = function(){
-  			
-  			$http.get("/getBodyProfile")
-				.success(function(data) {
-					console.log("Success returned from getBodyProfile function");
-					
-					if (data.status == 300){
-						alert("Please Complete Your Body Profile!!!");
-					}else if (data.status == 200){
-						window.location.assign('graph');
-					}
-					
-				})
-				
-   		} 
   		
   	}
   		

@@ -58,12 +58,19 @@ app.get('/getTodayCalories', routes.getTodayCalories);
 
 app.get('/getBodyProfile', routes.getBodyProfile);
 
+app.get('/graph', routes.graph);
+
 /********* POST REQUESTS *************/
 
 app.post('/newaccount', routes.newAccount);
 app.post('/signin', routes.signIn);
+
 app.post('/getFoodDetails', routes.getFoodDetails);
+app.post('/getExerciseDetails', routes.getExerciseDetails);
+
 app.post('/addToCatalog', routes.addToCatalog);
+app.post('/addToExerciseCatalog', routes.addToExerciseCatalog);
+
 app.post('/createBodyProfile', routes.createBodyProfile);
 
 http.createServer(app).listen(app.get('port'), function(){
