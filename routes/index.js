@@ -109,6 +109,25 @@ function bodyprofile(req, res){
 
 
 
+//This API renders REPORTS page
+
+function graph(req, res){
+
+	console.log("Inside server's GRAPH API");
+	
+	if (req.session.emailid){
+		
+		res.render("graph");
+		
+	}else{
+		
+		res.render("index");
+		
+	}
+	
+}
+
+
 // This API renders INDEX page on LOGOUT
 
 function logout(req, res){
@@ -779,6 +798,96 @@ function getBodyProfile (req, res){
 }
 
 
+/*
+ * APIs for Self Analysis - Graphs
+ */
+
+// This APIs Daily Calories Consumption for Graph representation
+
+function getDailyConsumedCalories (req, res){
+
+	var queryString;
+	var response;
+	var graphJson, graphData = [];
+	var tzoffset;
+	var localISOTime;
+	var color = "#0D52D1";
+	
+	console.log("Inside Server's getDailyConsumedCalories function...");
+
+	queryString = "SELECT SUM(log_calories) as log_calories, log_day from user_food_exercise_log where log_type = 'F' group by (log_day)";
+	console.log("getDailyConsumedCalories SELECT Query is: "+ queryString);
+		
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{				
+			console.log("User's Daily Calorie Consumption fetched successfully");
+			//console.log(results)
+			for (var i = 0; i < results.length; i++){
+				
+				tzoffset = results[i].log_day.getTimezoneOffset() * 60000; //offset in milliseconds
+				localISOTime = (new Date(results[i].log_day - tzoffset)).toISOString().substring(0, 10);
+				
+				// Alternate colors of bars in graph
+				if (color === "#0D52D1"){
+					
+					color = "#FF0F00";
+					
+				}else{
+					
+					color = "#0D52D1";
+					
+				}
+					
+				
+				graphJson = {"Day": localISOTime, "Calories": results[i].log_calories.toString(), "color": color};
+				graphData.push(graphJson);
+				//results[i].color = "#FF0F00";
+				
+			}
+			
+			response = {status:200, results: graphData};
+			res.end(JSON.stringify(response));
+		}	
+		
+	},queryString);
+
+}
+
+
+//This APIs Daily Calories Burned for Graph representation
+
+function getDailyBurnedCalories (req, res){
+
+	var queryString;
+	var response;
+	
+	console.log("Inside Server's getDailyBurnedCalories function...");
+
+	queryString = "SELECT SUM(log_calories), log_day from user_food_exercise_log where log_type = 'E' group by (log_day)";
+	console.log("getDailyBurnedCalories SELECT Query is: "+ queryString);
+		
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{				
+			console.log("User's Daily Calorie Burned fetched successfully");
+			response = {status:200, results: results};
+			res.end(JSON.stringify(response));
+		}	
+		
+	},queryString);
+	
+}
+
+
 // Rendering Pages APIs
 
 exports.index=index;
@@ -787,6 +896,7 @@ exports.signup=signup;
 exports.home=home;
 exports.foodlog=foodlog;
 exports.bodyprofile=bodyprofile;
+exports.graph=graph;
 exports.logout=logout;
 
 // Business Logic APIs
@@ -812,3 +922,8 @@ exports.addToCatalog=addToCatalog;
 exports.addToExerciseCatalog=addToExerciseCatalog;
 
 exports.getBodyProfile=getBodyProfile;
+
+// Reports APIs - Graphs for Analysis
+
+exports.getDailyConsumedCalories=getDailyConsumedCalories;
+exports.getDailyBurnedCalories=getDailyBurnedCalories;
