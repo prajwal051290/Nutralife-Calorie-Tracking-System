@@ -96,6 +96,8 @@ function bodyprofile(req, res){
 
 	console.log("Inside server's BODYPROFILE API");
 	
+	console.log(req.session.emailid);
+	
 	if (req.session.emailid){
 		
 		res.render("bodyprofile");
@@ -209,7 +211,7 @@ function newAccount(req, res){
 							}
 							else 
 							{
-									req.session.emailid = newAccountInfo.emailId;
+									req.session.emailid = newAccountInfo.emailid;
 									console.log("Successful Sign UP");
 									res.end();
 									
@@ -354,7 +356,7 @@ function calculateCalorieProfile(weight, height, age, gender, exerciseType, goal
 	if (goalWeight < weight)  // Meaning user wants to loose weight
 	{
 		differenceWeight = weight - goalWeight;
-		burnCalorieTotal = differenceWeight * 3500;
+		burnCalorieTotal = differenceWeight * 7700;
 		burnCalorieDaily = burnCalorieTotal / goalDays;
 		goalCalorieDaily = currentCalorie - burnCalorieDaily;
 	}
@@ -362,7 +364,7 @@ function calculateCalorieProfile(weight, height, age, gender, exerciseType, goal
 	if (goalWeight > weight)  // Meaning user wants to gain weight
 	{
 		differenceWeight = goalWeight - weight;
-		consumeCalorieTotal = differenceWeight * 3500;
+		consumeCalorieTotal = differenceWeight * 7700;
 		consumeCalorieDaily = consumeCalorieTotal / goalDays;
 		goalCalorieDaily = currentCalorie + consumeCalorieDaily;
 	}
@@ -371,7 +373,14 @@ function calculateCalorieProfile(weight, height, age, gender, exerciseType, goal
 	
 	// FOURTH - Calculate user's BMI
 	
+	var height_m, BMI;
+	
+	height_m = height/100;
+	height_m = height_m * height_m;
+	BMI = weight/height_m;
+	
 	calculatedProfile.bmr = BMR;
+	calculatedProfile.bmi = BMI;
 	calculatedProfile.currentCalorie = currentCalorie;
 	calculatedProfile.goalCalorieDaily = goalCalorieDaily;
 	
@@ -804,11 +813,11 @@ function createBodyProfile (req, res){
 	
 		calculatedProfile = calculateCalorieProfile(parseFloat(bodyProfile.weight), parseFloat(bodyProfile.height), parseInt(bodyProfile.age), bodyProfile.gender, bodyProfile.activity, bodyProfile.goalWeight, bodyProfile.goalDays);
 		
-		queryString = "INSERT INTO user_body_profile (emailid, gender, current_weight, current_height, goal_weight, goal_days, exercise_type, age, " +
-					  "bmr, current_calorie, target_calorie) VALUES " +
+		queryString = "INSERT INTO user_body_profile (emailid, gender, current_weight, current_height, goal_weight, goal_days, exercise_type, age," +
+					  "bmr, current_calorie, target_calorie, bmi) VALUES " +
 					  "('" + req.session.emailid + "', '" + bodyProfile.gender + "', '" + bodyProfile.weight + "', '" + bodyProfile.height + "', '" +
 					  bodyProfile.goalWeight + "', '"  + bodyProfile.goalDays + "', '" + bodyProfile.activity + "', '" + bodyProfile.age + "', '" + 
-					  calculatedProfile.bmr + "', '" + calculatedProfile.currentCalorie + "', '" + calculatedProfile.goalCalorieDaily + "')";
+					  calculatedProfile.bmr + "', '" + calculatedProfile.currentCalorie + "', '" + calculatedProfile.goalCalorieDaily + "', '" + calculatedProfile.bmi + "')";
 			
 		console.log("BodyProfile INSERT Query is: "+ queryString);
 		
