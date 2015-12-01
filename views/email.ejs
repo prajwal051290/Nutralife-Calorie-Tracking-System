@@ -52,7 +52,7 @@
 		    
 </head>
 
-<body ng-app="graphAngular" ng-controller="graphController">
+<body ng-app="emailAngular" ng-controller="emailController">
 
 	<div id="wrapper">
 
@@ -77,7 +77,7 @@
                     <ul class="dropdown-menu">
                     
                         <li>
-                            <a href="/logout"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                            <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
                         </li>
                         
                     </ul>
@@ -127,9 +127,64 @@
 
             <div class="container-fluid">
             
-            	<div id="chartdiv"></div> <! -- Graph Positioning -->
-
-            </div>
+            	<div class="container">
+            	
+	            	<div class="row">
+					
+						<div class="col-lg-6 col-md-7 col-sm-9">
+				
+						  <h4 style="border-bottom: 1px solid #c5c5c5;">
+						    Compose Message
+						  </h4>
+		  		
+				  		</div>
+			  	
+					</div>
+					
+					<div class="row">
+					  
+					  <div class="col-lg-6 col-md-7 col-sm-9">
+					  
+					  <form role="form">
+					  
+					      <div class="form-group">
+					        <label for="InputEmail">To Email</label>
+					        <div class="input-group">
+					          <input type="email" class="form-control" id="InputEmail" name="InputEmail" placeholder="Enter Receiver's Email Id" ng-model="toEmail" required  >
+					          <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span></div>
+					      </div>
+					      
+					      <div class="form-group">
+					        <label for="InputMessage">Subject</label>
+					        <div class="input-group">
+					          <input type="text" class="form-control" id="InputEmail" name="InputEmail" placeholder="Enter Email Subject" ng-model="subject" required  >
+					          <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span></div>
+					      </div>
+					      
+					      
+					      <div class="form-group">
+					        <label for="InputMessage">Message Body</label>
+					        <div class="input-group">
+					          <textarea name="InputMessage" id="InputMessage" class="form-control" rows="5" placeholder="Enter Your Message" ng-model="message" required></textarea>
+					          <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span></div>
+					      </div>
+					      				      
+					      <button class="btn btn-success btn-block btn btn-info pull-right" ng-click="sendEmail()">Send</button>
+					      
+					      <br><br><br><br><br><br><br><br><br><br>
+					      
+					  </form>
+					  
+					 </div>
+					 					  
+				</div>
+  	
+			  	
+			  	
+			  	
+			  	
+			  	
+			</div>
     	      
             <!-- /.container-fluid -->
 
@@ -145,19 +200,12 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="/js/bootstrap.min.js"></script>
 
-    <!-- Morris Charts JavaScript -->
-    <!--
-    <script src="../public/js/raphael.min.js"></script>
-    <script src="../public/js/morris.min.js"></script>
-    <script src="../public/js/morris-data.js"></script>
-	-->
-	
-	<script>
+    <script>
   
   	<!-- Controller Graph -->
   	
-  	var graph = angular.module('graphAngular', []);
-	graph.controller('graphController', homeOperations); 
+  	var email = angular.module('emailAngular', []);
+	email.controller('emailController', homeOperations); 
 			
 	function homeOperations($scope, $http) {
 	
@@ -166,74 +214,25 @@
   				console.log("Success returned from USERPROFILE function");
   				$scope.profile = data[0].first_name + " " + data[0].last_name;
   			})
-	
-	
-	$http.get("/getDailyConsumedCalories")
-	.success(function(data) {
-	
-		console.log("Success returned from getDailyConsumedCalories function");
-		console.log(data.results);
-		
-		
-		
-			var chart = AmCharts.makeChart("chartdiv", {
-    "theme": "light",
-    "type": "serial",
-	"startDuration": 2,
-    "dataProvider": data.results,
-    "valueAxes": [{
-        "position": "left",
-        "axisAlpha":0,
-        "gridAlpha":0         
-    }],
-    "graphs": [{
-        "balloonText": "[[category]]: <b>[[value]]</b>",
-        "colorField": "color",
-        "fillAlphas": 0.85,
-        "lineAlpha": 0.1,
-        "type": "column",
-        "topRadius":1,
-        "valueField": "Calories"
-    }],
-    "depth3D": 40,
-	"angle": 30,
-    "chartCursor": {
-        "categoryBalloonEnabled": false,
-        "cursorAlpha": 0,
-        "zoomable": false
-    },    
-    "categoryField": "Day",
-    "categoryAxis": {
-        "gridPosition": "start",
-        "axisAlpha":0,
-        "gridAlpha":0
-        
-    },
-    "export": {
-    	"enabled": true
-     }
-
-},0);
-
-jQuery('.chart-input').off().on('input change',function() {
-	var property	= jQuery(this).data('property');
-	var target		= chart;
-	chart.startDuration = 0;
-
-	if ( property == 'topRadius') {
-		target = chart.graphs[0];
-	}
-
-	target[property] = this.value;
-	chart.validateNow();
-});
-		
+  			
+  			
+  	$scope.sendEmail = function(){
+  			
+  			var emailInfo = {};
+  			
+  			emailInfo = {"to": $scope.toEmail, "subject": $scope.subject, "message": $scope.message};
+  			
+  			$http.post("/sendEmail", emailInfo)
+				.success(function(data) {
+					console.log("Success returned from sendEmail function");
+					
+			})
 				
-		
-	})
+   		}		
+  			
+  			
+	}
 	
-}
-  		
 	</script>
 	
 	

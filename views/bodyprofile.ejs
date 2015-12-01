@@ -90,7 +90,10 @@
                     <li>
                         <a href="" ng-click="alertBodyProfile2()"><i class="fa fa-fw fa-bar-chart-o"></i> Reports</a>
                     </li>
-                    
+                                        
+                    <li>
+                        <a href="" ng-click="alertBodyProfile3()"><i class="fa fa-fw fa-envelope"></i> Email</a>
+                    </li>
                     
                     <li>
                         <a href="#"><i class="fa fa-fw fa-desktop"></i> About Us</a>
@@ -196,11 +199,9 @@
 			
 			</div>
 			
-			<button class="btn btn-primary btn-block" ng-click="sendEmail()">Send Email</button>
-	
 		</div>
     	      
-            <!-- /.container-fluid -->
+        <!-- /.container-fluid -->
 
         </div>
         <!-- /#page-wrapper -->
@@ -398,23 +399,29 @@
    		}
   		
   	
-  		$scope.sendEmail = function(){
+  		// Email
+   		$scope.alertBodyProfile3 = function(){
   			
-  			$http.post("/sendEmail")
+  			$http.get("/getBodyProfile")
 				.success(function(data) {
-					alert("Success returned from sendEmail function");
+					console.log("Success returned from getBodyProfile function");
 					
-			})
+					if (data.status == 300){
+					
+						alert("Please Complete Your Body Profile!!!");
+					
+					}else if (data.status == 200){
+					
+						window.location.assign('email');
+						
+					}
+					
+				})
 				
    		}
-  	
   		
-  	}
+ 	}
   	
-  	
-  	
-  	
-  		
 	</script>
 	
 	

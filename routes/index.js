@@ -131,6 +131,26 @@ function graph(req, res){
 }
 
 
+
+//This API renders EMAIL page
+
+function email(req, res){
+
+	console.log("Inside server's EMAIL API");
+	
+	if (req.session.emailid){
+		
+		res.render("email");
+		
+	}else{
+		
+		res.render("index");
+		
+	}
+	
+}
+
+
 // This API renders INDEX page on LOGOUT
 
 function logout(req, res){
@@ -546,7 +566,7 @@ function getGoalCalories (req, res){
 		
 	console.log("Inside Server's GETGOALCALORIES function...");
 	
-	queryString = "SELECT target_calorie FROM user_body_profile WHERE emailid = '" + req.session.emailid + "'";
+	queryString = "SELECT * FROM user_body_profile WHERE emailid = '" + req.session.emailid + "'";
 	
 	console.log("getGoalCalories SELECT Query is: "+ queryString);
 		
@@ -612,7 +632,7 @@ function getTodayCalories (req, res){
 				else 
 				{				
 					console.log("user's burn calories fetched successfully!!!");
-					console.log("Total burned of calories today: " + results1[0].burn_calories);
+					console.log("Total burned calories today: " + results1[0].burn_calories);
 					finalResult.consumed = results[0].consume_calories;
 					finalResult.burned = results1[0].burn_calories;
 					finalResult.net = results[0].consume_calories - results1[0].burn_calories;
@@ -980,6 +1000,12 @@ function getDailyBurnedCalories (req, res){
 
 function sendEmail (req, res){
 
+		var emailInfo = req.body;
+	
+		var to = emailInfo.to;
+		var subject = emailInfo.subject;
+		var message = emailInfo.message;
+		
 		//create reusable transporter object using SMTP transport
 		var transporter = nodemailer.createTransport({
 		 service: 'Yahoo',
@@ -989,19 +1015,16 @@ function sendEmail (req, res){
 		 }
 		});
 		
-		/*user: 'pk.kondawar@gmail.com',
-	     pass: 'c-/\/\@!lp@$$w0r|)'*/
-		
 		//NB! No need to recreate the transporter object. You can use
 		//the same transporter object for all e-mails
 		
 		//setup e-mail data with unicode symbols
 		var mailOptions = {
-		 from: 'F ✔ <prajwal_kondawar@yahoo.co.in>', // sender address
-		 to: 'pk.kondawar@gmail.com', // list of receivers
-		 subject: 'Hello ✔', // Subject line
-		 text: 'Hello world ✔', // plaintext body
-		 html: '<b>Hello world ✔</b>' // html body
+		 from: 'Nutralife Team <prajwal_kondawar@yahoo.co.in>', // sender address
+		 to: to, // list of receivers
+		 subject: subject, // Subject line
+		 text: message, // plaintext body
+		 html: message // html body
 		};
 		
 		//send mail with defined transport object
@@ -1068,6 +1091,7 @@ exports.home=home;
 exports.foodlog=foodlog;
 exports.bodyprofile=bodyprofile;
 exports.graph=graph;
+exports.email=email;
 exports.logout=logout;
 
 // Business Logic APIs

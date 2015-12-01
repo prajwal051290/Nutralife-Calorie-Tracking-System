@@ -56,7 +56,7 @@
             
             <ul class="nav navbar-right top-nav">
             	<li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{profile}} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                     
                         <li>
@@ -91,6 +91,9 @@
                         <a href="graph"><i class="fa fa-fw fa-bar-chart-o"></i> Reports</a>
                     </li>
                     
+                    <li>
+                        <a href="email"><i class="fa fa-fw fa-envelope"></i> Email</a>
+                    </li>
                     
                     <li>
                         <a href="#"><i class="fa fa-fw fa-desktop"></i> About Us</a>
@@ -149,7 +152,13 @@
 		                    </div>
 	                    
 	              		</div>
-               
+	              		
+	              		<div ng-show="blankSpace">
+	              		
+	              			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	              		
+               			</div>
+               			
                <div ng-show="foodlog2">
                
                		    <br>
@@ -211,11 +220,14 @@
                 		
                 			<div class="col-lg-6 col-md-12">
                 				
-                				<strong>{{foodLogStatus}}</strong>
+                				<span style="color:green; font-weight:bold";>{{foodLogStatus}}</span>
+                				<!--<strong>{{foodLogStatus}}</strong>-->
                 				
                 			</div>
                 			
                 		</div>
+	                	
+	                	<br><br><br><br><br><br><br><br>
 	                		 
 	               </div> <!-- END OF FOODLOG2 -->
 	               
@@ -262,11 +274,14 @@
                 		
                 			<div class="col-lg-6 col-md-12">
                 				
-                				<strong>{{exerciseLogStatus}}</strong>
+                				<span style="color:green; font-weight:bold";>{{exerciseLogStatus}}</span>
+                				<!--<strong>{{exerciseLogStatus}}</strong>-->
                 				
                 			</div>
                 			
                 		</div>
+                		
+                		<br><br><br><br><br><br><br><br><br><br><br><br><br>
 	                		 
 	               </div> <!-- END OF FOODLOG3 -->
 	               
@@ -307,8 +322,16 @@
   			$scope.foodlog3 = false;
   			$scope.foodtable = false;
   			
+  			$scope.blankSpace = true;
+  			
   			var foodDetails = [];
   			var exerciseDetails = [];
+  			
+  		$http.get("/userProfile")
+  			.success(function(data) {
+  				console.log("Success returned from USERPROFILE function");
+  				$scope.profile = data[0].first_name + " " + data[0].last_name;
+  			})	
   			
   		/* Get food details from FOOD_DB */
   		
@@ -320,6 +343,8 @@
   			
   			$scope.foodlog2 = true;
   			$scope.foodtable = true;
+  			
+  			$scope.blankSpace = false;
   			
   			foodName = {"food_name": $scope.food};
   			$http.post("/getFoodDetails", foodName)
@@ -344,6 +369,8 @@
   			$scope.foodtable = false;
   			
   			$scope.foodlog3 = true;
+  			 
+  			$scope.blankSpace = false;
   			  		
   			var exerciseName = {};
   			exerciseName = {"exercise_name": $scope.exercise};

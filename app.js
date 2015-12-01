@@ -60,6 +60,8 @@ app.get('/getBodyProfile', routes.getBodyProfile);
 
 app.get('/graph', routes.graph);
 
+app.get('/email', routes.email);
+
 /********* REPORT APIs *************/
 
 app.get('/getDailyConsumedCalories', routes.getDailyConsumedCalories);
