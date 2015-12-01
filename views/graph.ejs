@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Nutralife - Dashboard</title>
+    <title>Nutralife - Reports</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
@@ -66,7 +66,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">NUTRALIFE</a>
+                <a class="navbar-brand" href="home">NUTRALIFE</a>
             </div>
             
             <!-- Top Menu Items START -->
@@ -127,7 +127,67 @@
 
             <div class="container-fluid">
             
-            	<div id="chartdiv"></div> <! -- Graph Positioning -->
+            	<div class="container">
+				
+					<div class="row">
+				
+						<div class="col-lg-12 col-md-7 col-sm-9">
+			
+					  	<h4 style="border-bottom: 1px solid #c5c5c5;">
+					    	Self Analysis Reports
+					  	</h4>
+					  	
+					  	<div style="padding: 20px;" id="form-olvidado">
+					  	
+					  		<form accept-charset="UTF-8" role="form" id="graph-form">
+			  			
+			    				<fieldset>
+				      		
+									<div class="form-group input-group">
+							        
+							           	<label class="control-label">Choose Your Option</label>
+							           	
+	    								<select name="report" class="form-control beta" ng-model="report">
+	            							<option value="C">Calories Consumed</option>
+	            							<option value="B">Calories Burned</option>
+	            							<option value="N">Net Calories</option>
+	    								</select>
+	    								
+									</div>
+							        
+							     </fieldset>
+							     
+							  </form>
+							  
+						  </div>
+					  	
+					</div>
+					
+					<br>
+					
+					<div class="row">
+					
+						<div class="col-lg-3 col-md-7 col-sm-9">
+					
+							<button class="btn btn-primary btn-block" ng-click="showGraph()">Display Analysis</button>
+							
+						</div>
+						
+					</div>
+					
+					<div class="row" ng-show="graphs">
+					
+						<div class="col-lg-12 col-md-7 col-sm-9">
+						
+							<div id="chartdiv"></div>
+							
+						</div>
+						
+					</div>  <!-- Graph - End -->
+					 
+				</div>
+            
+            <!-- /.container -->	
 
             </div>
     	      
@@ -161,6 +221,8 @@
 			
 	function homeOperations($scope, $http) {
 	
+	$scope.graphs = false;
+	
 	$http.get("/userProfile")
   			.success(function(data) {
   				console.log("Success returned from USERPROFILE function");
@@ -168,69 +230,79 @@
   			})
 	
 	
-	$http.get("/getDailyConsumedCalories")
-	.success(function(data) {
+	$scope.showGraph = function(){
 	
-		console.log("Success returned from getDailyConsumedCalories function");
-		console.log(data.results);
+	var chart;
+	
+	$scope.graphs = true;
+	
+	console.log("Graph Function: " + $scope.report);
+	
+	if ($scope.report === "C"){
+	
+		$http.get("/getDailyConsumedCalories")
+		.success(function(data) {
 		
+			console.log("Success returned from getDailyConsumedCalories function");
+			console.log(data.results);
+			
+			chart = AmCharts.makeChart("chartdiv", {
+		    "theme": "light",
+		    "type": "serial",
+			"startDuration": 2,
+		    "dataProvider": data.results,
+		    "valueAxes": [{
+		        "position": "left",
+		        "axisAlpha":0,
+		        "gridAlpha":0         
+		    }],
+		    "graphs": [{
+		        "balloonText": "[[category]]: <b>[[value]]</b>",
+		        "colorField": "color",
+		        "fillAlphas": 0.85,
+		        "lineAlpha": 0.1,
+		        "type": "column",
+		        "topRadius":1,
+		        "valueField": "Calories"
+		    }],
+		    "depth3D": 40,
+			"angle": 30,
+		    "chartCursor": {
+		        "categoryBalloonEnabled": false,
+		        "cursorAlpha": 0,
+		        "zoomable": false
+		    },    
+		    "categoryField": "Day",
+		    "categoryAxis": {
+		        "gridPosition": "start",
+		        "axisAlpha":0,
+		        "gridAlpha":0
+		        
+		    },
+		    "export": {
+		    	"enabled": true
+		     }
 		
+		},0);
+	
+		jQuery('.chart-input').off().on('input change',function() {
+			var property	= jQuery(this).data('property');
+			var target		= chart;
+			chart.startDuration = 0;
 		
-			var chart = AmCharts.makeChart("chartdiv", {
-    "theme": "light",
-    "type": "serial",
-	"startDuration": 2,
-    "dataProvider": data.results,
-    "valueAxes": [{
-        "position": "left",
-        "axisAlpha":0,
-        "gridAlpha":0         
-    }],
-    "graphs": [{
-        "balloonText": "[[category]]: <b>[[value]]</b>",
-        "colorField": "color",
-        "fillAlphas": 0.85,
-        "lineAlpha": 0.1,
-        "type": "column",
-        "topRadius":1,
-        "valueField": "Calories"
-    }],
-    "depth3D": 40,
-	"angle": 30,
-    "chartCursor": {
-        "categoryBalloonEnabled": false,
-        "cursorAlpha": 0,
-        "zoomable": false
-    },    
-    "categoryField": "Day",
-    "categoryAxis": {
-        "gridPosition": "start",
-        "axisAlpha":0,
-        "gridAlpha":0
-        
-    },
-    "export": {
-    	"enabled": true
-     }
-
-},0);
-
-jQuery('.chart-input').off().on('input change',function() {
-	var property	= jQuery(this).data('property');
-	var target		= chart;
-	chart.startDuration = 0;
-
-	if ( property == 'topRadius') {
-		target = chart.graphs[0];
-	}
-
-	target[property] = this.value;
-	chart.validateNow();
-});
+			if ( property == 'topRadius') {
+				target = chart.graphs[0];
+			}
 		
-				
-		
+			target[property] = this.value;
+			chart.validateNow();
+		});
+			
 	})
+		
+	}
+		
+	}
 	
 }
   		

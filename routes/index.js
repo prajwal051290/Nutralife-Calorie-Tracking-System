@@ -921,7 +921,7 @@ function getDailyConsumedCalories (req, res){
 	
 	console.log("Inside Server's getDailyConsumedCalories function...");
 
-	queryString = "SELECT SUM(log_calories) as log_calories, log_day from user_food_exercise_log where log_type = 'F' group by (log_day)";
+	queryString = "SELECT SUM(log_calories) as log_calories, log_day from user_food_exercise_log where log_type = 'F' group by (log_day) order by 2 asc";
 	console.log("getDailyConsumedCalories SELECT Query is: "+ queryString);
 		
 	queryExec.fetchData(function(err,results){
@@ -971,10 +971,14 @@ function getDailyBurnedCalories (req, res){
 
 	var queryString;
 	var response;
+	var graphJson, graphData = [];
+	var tzoffset;
+	var localISOTime;
+	var color = "#0D52D1";
 	
 	console.log("Inside Server's getDailyBurnedCalories function...");
 
-	queryString = "SELECT SUM(log_calories), log_day from user_food_exercise_log where log_type = 'E' group by (log_day)";
+	queryString = "SELECT SUM(log_calories) as log_calories, log_day from user_food_exercise_log where log_type = 'E' group by (log_day) order by 2 asc";
 	console.log("getDailyBurnedCalories SELECT Query is: "+ queryString);
 		
 	queryExec.fetchData(function(err,results){
@@ -985,7 +989,30 @@ function getDailyBurnedCalories (req, res){
 		else 
 		{				
 			console.log("User's Daily Calorie Burned fetched successfully");
-			response = {status:200, results: results};
+			//console.log(results)
+			for (var i = 0; i < results.length; i++){
+				
+				tzoffset = results[i].log_day.getTimezoneOffset() * 60000; //offset in milliseconds
+				localISOTime = (new Date(results[i].log_day - tzoffset)).toISOString().substring(0, 10);
+				
+				// Alternate colors of bars in graph
+				if (color === "#0D52D1"){
+					
+					color = "#FF0F00";
+					
+				}else{
+					
+					color = "#0D52D1";
+					
+				}
+					
+				
+				graphJson = {"Day": localISOTime, "Calories": results[i].log_calories.toString(), "color": color};
+				graphData.push(graphJson);
+				//results[i].color = "#FF0F00";
+			}
+			
+			response = {status:200, results: graphData};
 			res.end(JSON.stringify(response));
 		}	
 		
