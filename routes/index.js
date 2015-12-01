@@ -149,50 +149,78 @@ function newAccount(req, res){
 	
 	newAccountInfo = req.body;
 	
-	//Check if the Email ID user is giving while creating an account already exists. If yes then, don't allow to create an account.
 	
-	queryString = "SELECT emailid FROM users WHERE emailid = '" + newAccountInfo.emailid + "'";  
-	console.log("Account already exists Query is: "+ queryString);
+	/* Perform Server-side Validations */ 
 	
+	if (newAccountInfo.first_name === undefined){
+		
+		res.end("first_name");
+		
+	}else if (newAccountInfo.last_name === undefined){
+		
+		res.end("last_name");
+		
+	}else if (newAccountInfo.emailid === undefined){
+		
+		res.end("emailid");
+		
+	}else if (newAccountInfo.password === undefined){
+		
+		res.end("password");
+		
+	}else if (newAccountInfo.confirm_password === undefined){
+		
+		res.end("confirm_password");
+		
+	}else if (newAccountInfo.password != newAccountInfo.confirm_password){
+		
+		res.end("match");
+		
+	}else{
+		//Check if the Email ID user is giving while creating an account already exists. If yes then, don't allow to create an account.
+		
+		queryString = "SELECT emailid FROM users WHERE emailid = '" + newAccountInfo.emailid + "'";  
+		console.log("Account already exists Query is: "+ queryString);
+		
+		
+		queryExec.fetchData(function(err,results){
+			if(err){
+				throw err;
+			}
+			else 
+			{
+					
+					if(results.length > 0){
+						console.log("Email ID already exists");
+						res.end("exist");
+					}
+					
+					else{
+						console.log("Creating account...");
+						
+						queryString = "INSERT INTO users (`emailid`, `first_name`, `last_name`, `password`) VALUES ('" + newAccountInfo.emailid + 
+									  "', '" + newAccountInfo.first_name + "', '" + newAccountInfo.last_name + "', '" + newAccountInfo.password + "')";
+						
+						console.log("Sign Up Query is: "+ queryString);
+						
+						queryExec.fetchData(function(err,results){
+							if(err){
+								throw err;
+							}
+							else 
+							{
+									req.session.emailid = newAccountInfo.emailId;
+									console.log("Successful Sign UP");
+									res.end();
+									
+							}	
+						},queryString);
 	
-	queryExec.fetchData(function(err,results){
-		if(err){
-			throw err;
+					}
+				
+				}	
+			},queryString);
 		}
-		else 
-		{
-				
-				if(results.length > 0){
-					console.log("Email ID already exists");
-					res.end();
-				}
-				
-				else{
-					console.log("Creating account...");
-					
-					queryString = "INSERT INTO users (`emailid`, `first_name`, `last_name`, `password`) VALUES ('" + newAccountInfo.emailid + 
-								  "', '" + newAccountInfo.first_name + "', '" + newAccountInfo.last_name + "', '" + newAccountInfo.password + "')";
-					
-					console.log("Sign Up Query is: "+ queryString);
-					
-					queryExec.fetchData(function(err,results){
-						if(err){
-							throw err;
-						}
-						else 
-						{
-								req.session.emailid = newAccountInfo.emailId;
-								console.log("Successful Sign UP");
-								res.end();
-								
-						}	
-					},queryString);
-
-				}
-			
-			}	
-		},queryString);
-	
 		
 }
 
@@ -207,33 +235,47 @@ function signIn(req, res){
 	
 	signInInfo = req.body;
 	
-	//Check if the Email ID and Password exists in the system.
 	
-	queryString = "SELECT emailid FROM users WHERE emailid = '" + signInInfo.emailid + "' AND password = '" + signInInfo.password + "'";  
-	console.log("Login Query is: "+ queryString);
+	/* Perform Server-side Validations */ 
 	
-	
-	queryExec.fetchData(function(err,results){
-		if(err){
-			throw err;
-		}
-		else 
-		{
-				
-				if(results.length > 0){
-					req.session.emailid = signInInfo.emailid;
-					console.log("Allow Login");
-					res.end();
-				}
-				
-				else{
-					console.log("Invalid Login...");
-				}
-			
-			}	
-		},queryString);
-	
+	if (signInInfo.emailid === undefined){
 		
+		res.end("emailid");
+		
+	}else if (signInInfo.password === undefined){
+		
+		res.end("password");
+		
+	}else{
+	
+		//Check if the Email ID and Password exists in the system.
+		
+		queryString = "SELECT emailid FROM users WHERE emailid = '" + signInInfo.emailid + "' AND password = '" + signInInfo.password + "'";  
+		console.log("Login Query is: "+ queryString);
+		
+		
+		queryExec.fetchData(function(err,results){
+			if(err){
+				throw err;
+			}
+			else 
+			{
+					
+					if(results.length > 0){
+						req.session.emailid = signInInfo.emailid;
+						console.log("Allow Login");
+						res.end("success");
+					}
+					
+					else{
+						console.log("Invalid Login...");
+						res.end("fail");
+					}
+				
+				}	
+			},queryString);
+	
+	}
 }
 
 
@@ -728,30 +770,64 @@ function createBodyProfile (req, res){
 		
 	bodyProfile = req.body;
 	
-	calculatedProfile = calculateCalorieProfile(parseFloat(bodyProfile.weight), parseFloat(bodyProfile.height), parseInt(bodyProfile.age), bodyProfile.gender, bodyProfile.activity, bodyProfile.goalWeight, bodyProfile.goalDays);
+	// Server Side Validations
 	
-	queryString = "INSERT INTO user_body_profile (emailid, gender, current_weight, current_height, goal_weight, goal_days, exercise_type, age, " +
-				  "bmr, current_calorie, target_calorie) VALUES " +
-				  "('" + req.session.emailid + "', '" + bodyProfile.gender + "', '" + bodyProfile.weight + "', '" + bodyProfile.height + "', '" +
-				  bodyProfile.goalWeight + "', '"  + bodyProfile.goalDays + "', '" + bodyProfile.activity + "', '" + bodyProfile.age + "', '" + 
-				  calculatedProfile.bmr + "', '" + calculatedProfile.currentCalorie + "', '" + calculatedProfile.goalCalorieDaily + "')";
+	if (bodyProfile.weight === undefined){
 		
-	console.log("BodyProfile INSERT Query is: "+ queryString);
+		res.end("weight");
+		
+	}else if (bodyProfile.height === undefined){
+		
+		res.end("height");
+		
+	}else if (bodyProfile.gender === undefined){
+		
+		res.end("gender");
+		
+	}else if (bodyProfile.age === undefined){
+		
+		res.end("age");
+		
+	}else if (bodyProfile.activity === undefined){
+		
+		res.end("activity");
+		
+	}else if (bodyProfile.goalWeight === undefined){
+		
+		res.end("goalWeight");
+		
+	}else if (bodyProfile.goalDays === undefined){
+		
+		res.end("goalDays");
+		
+	}else{
 	
-	
-	queryExec.fetchData(function(err,results){
+		calculatedProfile = calculateCalorieProfile(parseFloat(bodyProfile.weight), parseFloat(bodyProfile.height), parseInt(bodyProfile.age), bodyProfile.gender, bodyProfile.activity, bodyProfile.goalWeight, bodyProfile.goalDays);
 		
-		if(err){
-			throw err;
-		}
-		else 
-		{				
-			console.log("Row inserted to user_body_profile successfully!!!");
-			res.end();
-					
-		}	
+		queryString = "INSERT INTO user_body_profile (emailid, gender, current_weight, current_height, goal_weight, goal_days, exercise_type, age, " +
+					  "bmr, current_calorie, target_calorie) VALUES " +
+					  "('" + req.session.emailid + "', '" + bodyProfile.gender + "', '" + bodyProfile.weight + "', '" + bodyProfile.height + "', '" +
+					  bodyProfile.goalWeight + "', '"  + bodyProfile.goalDays + "', '" + bodyProfile.activity + "', '" + bodyProfile.age + "', '" + 
+					  calculatedProfile.bmr + "', '" + calculatedProfile.currentCalorie + "', '" + calculatedProfile.goalCalorieDaily + "')";
+			
+		console.log("BodyProfile INSERT Query is: "+ queryString);
 		
-	},queryString);
+		
+		queryExec.fetchData(function(err,results){
+			
+			if(err){
+				throw err;
+			}
+			else 
+			{				
+				console.log("Row inserted to user_body_profile successfully!!!");
+				res.end();
+						
+			}	
+			
+		},queryString);
+		
+	}
 
 }
 
@@ -934,14 +1010,44 @@ function sendEmail (req, res){
 
 
 
+//This API gets user's body profile
 
+function getBodyProfile (req, res){
 
+	var queryString;
+	var response;
+	
+	console.log("Inside Server's getBodyProfile function...");
 
-
-
-
-
-
+	queryString = "SELECT * FROM user_body_profile WHERE emailid = '" + req.session.emailid + "'";
+	console.log("getBodyProfile SELECT Query is: "+ queryString);
+		
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{	
+			if (results.length > 0){
+				
+				console.log("User's Body Profile fetched successfully");
+				response = {status:200, results: results};
+				res.end(JSON.stringify(response));
+				
+			}else{
+				
+				console.log("User's Body Profile is not yet created");
+				response = {status:300, results: results};
+				res.end(JSON.stringify(response));
+				
+			}
+			
+		}	
+		
+	},queryString);
+	
+}
 
 
 // Rendering Pages APIs
@@ -985,3 +1091,5 @@ exports.getDailyConsumedCalories=getDailyConsumedCalories;
 exports.getDailyBurnedCalories=getDailyBurnedCalories;
 
 exports.sendEmail=sendEmail;
+
+exports.getBodyProfile=getBodyProfile;

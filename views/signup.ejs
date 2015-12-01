@@ -90,7 +90,12 @@
 				          
 				        </div>
 				        
-		      		</fieldset>
+				        
+				        <br>
+				        
+				        <span style="color:red; font-weight:bold";>{{signUpValidation}}</span>
+				        				          
+				   </fieldset>
 	      		
 	    		<!--</form>-->
 	    		
@@ -114,12 +119,46 @@
   		
   		$scope.signUp = function(){
   		
-  			var signUpInfo = {first_name:$scope.first_name, last_name:$scope.last_name, emailid:$scope.emailid, password:$scope.password};
+  			var signUpInfo = {first_name:$scope.first_name, last_name:$scope.last_name, emailid:$scope.emailid, password:$scope.password, confirm_password: $scope.confirm_password};
   			
   			$http.post("/newaccount", signUpInfo)
   			.success(function(data) {
-  				console.log("Success returned from SIGNUP function");
-  				window.location.assign("/bodyprofile");
+  								
+  				if (data === "first_name"){
+		
+					$scope.signUpValidation = "FIRST NAME IS MANDATORY!!!"
+		
+				}else if (data === "last_name"){
+		
+					$scope.signUpValidation = "LAST NAME IS MANDATORY!!!"
+		
+				}else if (data === "emailid"){
+		
+					$scope.signUpValidation = "EMAILID IS MANDATORY!!!"
+		
+				}else if (data === "password"){
+		
+					$scope.signUpValidation = "PASSWORD IS MANDATORY!!!"
+		
+				}else if (data === "confirm_password"){
+		
+					$scope.signUpValidation = "CONFIRM PASSWORD IS MANDATORY!!!"
+		
+				}else if (data === "match"){
+		
+					$scope.signUpValidation = "PASSWORDS DONT MATCH!!!"
+		
+				}else if (data === "exist"){
+		
+					$scope.signUpValidation = "THIS EMAILID ALREADY EXISTS. PLEASE LOGIN WITH YOU EMAILID AND PASSWORD!!!"
+		
+				}
+				else{
+				
+  					console.log("Success returned from SIGNUP function");
+  					window.location.assign("/bodyprofile");
+  					
+  				}
             })
   			
   		}

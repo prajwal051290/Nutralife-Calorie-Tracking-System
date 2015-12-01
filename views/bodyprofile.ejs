@@ -122,14 +122,14 @@
 			  		
 			  			<form accept-charset="UTF-8" role="form" id="login-form">
 			  			
-			    			<fieldset>
+			    			<fieldset ng-disabled="disableProfile">
 				      		
 								<div class="form-group input-group">
-						        	<strong>Current Weight: </strong><input class="form-control" placeholder="Current Weight in lbs" name="current_weight" type="number" required="" autofocus="" ng-model="current_weight">
+						        	<strong>Current Weight: </strong><input class="form-control" placeholder="Current Weight in lbs" name="current_weight" type="number" autofocus="" ng-model="current_weight">
 						        </div>
 						        
 						        <div class="form-group input-group">
-						        	<strong>Current Height: </strong><input class="form-control" placeholder="Current Height in inches" name="current_height" type="number" required="" autofocus="" ng-model="current_height">
+						        	<strong>Current Height: </strong><input class="form-control" placeholder="Current Height in inches" name="current_height" type="number" autofocus="" ng-model="current_height">
 						        </div>		      		
 				      			
 				      			
@@ -145,7 +145,7 @@
 						        </div>
 						        
 						        <div class="form-group input-group">
-						        	<strong>Age: </strong><input class="form-control" placeholder="Complete Age in Years" name="age" type="number" required="" autofocus="" ng-model="age">
+						        	<strong>Age: </strong><input class="form-control" placeholder="Complete Age in Years" name="age" type="number" autofocus="" ng-model="age">
 						        </div>
 						        
 						        <strong>How would you describe your daily activities?</strong>
@@ -163,21 +163,25 @@
 						        </div>
 						        
 						        <div class="form-group input-group">
-						        	<strong>Goal Weight: </strong><input class="form-control" placeholder="Goal Weight in lbs" name="goal_weight" type="number" value="" required="" ng-model="goal_weight">
+						        	<strong>Goal Weight: </strong><input class="form-control" placeholder="Goal Weight in lbs" name="goal_weight" type="number" value="" ng-model="goal_weight">
 						        </div>
 						        
 						        <div class="form-group input-group">
-						        	<strong>Goal Days: </strong><input class="form-control" placeholder="Goal Days" name="goal_days" type="number" value="" required="" ng-model="goal_days">
+						        	<strong>Goal Days: </strong><input class="form-control" placeholder="Goal Days" name="goal_days" type="number" value="" ng-model="goal_days">
 						        </div>
 						        
 						        <div class="form-group input-group">
+						        
+						        	<button class="btn btn-primary btn-block" ng-click="createBodyProfile()">Create Body Profile</button>
 						        	
 						        </div>
 						        
-						        <div class="form-group">
+						        <div ng-show="error">
+						        	<span style="color:red; font-weight:bold";>{{bodyProfileValidation}}</span>
+						        </div>
 						        
-						          <button class="btn btn-primary btn-block" ng-click="createBodyProfile()">Create Body Profile</button>
-						          
+						        <div ng-show="success">
+						        	<span style="color:green; font-weight:bold";>{{bodyProfileValidation}}</span>
 						        </div>
 						        
 				      		</fieldset>
@@ -227,7 +231,40 @@
 			
 	function bodyProfileOperations($scope, $http) {
   		
+  		$scope.error = false;	
+  		$scope.success = false;
+  		$scope.disableProfile = false;
+  		
+  		$http.get("/userProfile")
+  			.success(function(data) {
   			
+  				console.log("Success returned from USERPROFILE function");
+  				$scope.profile = data[0].first_name + " " + data[0].last_name
+  				
+  				$http.get("/getBodyProfile")
+				.success(function(data) {
+				
+					if (data.status === 200){
+					
+						$scope.current_weight = data.results[0].current_weight;
+						$scope.current_height = data.results[0].current_height;
+						$scope.gender = data.results[0].gender;
+						$scope.age = data.results[0].age;
+						$scope.activity = data.results[0].exercise_type;
+						$scope.goal_weight = data.results[0].goal_weight;
+						$scope.goal_days = data.results[0].goal_days;
+						
+						$scope.disableProfile = true;
+					
+					}else if (data.status === 300){
+					
+						$scope.disableProfile = false;
+					
+					}
+					
+				})
+				 
+  			})
   			
   		$scope.createBodyProfile = function(){
   		
@@ -237,7 +274,59 @@
   			  			
   			$http.post("/createBodyProfile", bodyProfile)
 				.success(function(data) {
+				
+				if (data === "weight"){
+		
+					$scope.bodyProfileValidation = "CURRENT WEIGHT IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+  					
+					
+				}else if (data === "height"){
+					
+					$scope.bodyProfileValidation = "CURRENT HEIGHT IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+  					$scope.disableProfile = true;
+					
+				}else if (data === "gender"){
+					
+					$scope.bodyProfileValidation = "GENDER IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+					
+				}else if (data === "age"){
+					
+					$scope.bodyProfileValidation = "AGE IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+					
+				}else if (data === "activity"){
+					
+					$scope.bodyProfileValidation = "ACTIVITY IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+					
+				}else if (data === "goalWeight"){
+					
+					$scope.bodyProfileValidation = "GOAL WEIGHT IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+					
+				}else if (data === "goalDays"){
+					
+					$scope.bodyProfileValidation = "GOAL DAYS IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+					
+				}else {
+				
 					console.log("Success returned from CREATEBODYPROFILE function");
+					$scope.bodyProfileValidation = "CONGRATULATIONS! YOUR BODY PROFILE CREATED SUCCESSFULLY!!!";
+					$scope.error = false;	
+  					$scope.success = true;
+					
+				}
 			})
   		}
   		

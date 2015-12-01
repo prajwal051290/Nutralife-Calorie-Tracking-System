@@ -68,6 +68,10 @@
 				          </p>
 				        </div>
 				        
+				        <br>
+				        
+				        <span style="color:red; font-weight:bold";>{{loginValidation}}</span>
+				        
 		      		</fieldset>
 	      		
 	    		<!--</form>-->
@@ -96,8 +100,27 @@
   			
   			$http.post("/signin", loginInfo)
   			.success(function(data) {
-  				console.log("Success returned from SIGNIN function");
-  				window.location.assign("/bodyprofile");
+  			
+  				if (data === "emailid"){
+		
+					$scope.loginValidation = "EMAILID IS MANDATORY!!!";
+		
+				}else if (data === "password"){
+		
+					$scope.loginValidation = "PASSWORD IS MANDATORY!!!";
+				
+				}else if (data === "fail"){
+				
+					$scope.loginValidation = "WE DO NOT HAVE THIS ACCOUNT. PLEASE SIGNUP!!!";
+					
+				}
+				else if (data === "success"){  			
+				
+  					console.log("Success returned from SIGNIN function");
+  					window.location.assign("/bodyprofile");
+  					
+  				}
+  				
             })
   			
   		}
