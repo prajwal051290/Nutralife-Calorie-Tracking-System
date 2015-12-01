@@ -1036,6 +1036,7 @@ function sendEmail (req, res){
 		 console.log('Information: ' + info);
 		});
 
+		res.end();
 }
 
 

@@ -171,6 +171,9 @@
 					      				      
 					      <button class="btn btn-success btn-block btn btn-info pull-right" ng-click="sendEmail()">Send</button>
 					      
+					      <br>
+					      <div class="alert alert-success" ng-show="emailStatus"><strong>Success! Message sent.</strong></div>
+					      
 					      <br><br><br><br><br><br><br><br><br><br>
 					      
 					  </form>
@@ -209,6 +212,8 @@
 			
 	function homeOperations($scope, $http) {
 	
+	$scope.emailStatus = false;
+	
 	$http.get("/userProfile")
   			.success(function(data) {
   				console.log("Success returned from USERPROFILE function");
@@ -225,7 +230,7 @@
   			$http.post("/sendEmail", emailInfo)
 				.success(function(data) {
 					console.log("Success returned from sendEmail function");
-					
+					$scope.emailStatus=true;
 			})
 				
    		}		
