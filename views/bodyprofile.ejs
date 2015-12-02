@@ -315,6 +315,12 @@
 					$scope.error = true;	
   					$scope.success = false;
 					
+				}else if (data === "same"){
+				
+					$scope.bodyProfileValidation = "You Have Already Reached Your Goal!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+				
 				}else {
 				
 					console.log("Success returned from CREATEBODYPROFILE function");

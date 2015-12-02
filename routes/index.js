@@ -866,6 +866,10 @@ function createBodyProfile (req, res){
 		
 		res.end("goalDays");
 		
+	}else if (bodyProfile.weight === bodyProfile.goalWeight){
+		
+		res.end("same");
+		
 	}else{
 	
 		calculatedProfile = calculateCalorieProfile(parseFloat(bodyProfile.weight), parseFloat(bodyProfile.height), parseInt(bodyProfile.age), bodyProfile.gender, bodyProfile.activity, bodyProfile.goalWeight, bodyProfile.goalDays);
