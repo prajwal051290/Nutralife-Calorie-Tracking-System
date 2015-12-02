@@ -164,7 +164,7 @@
 		              		
 		              			<div class="col-lg-6 col-md-12">
 		                		 	
-		                		 	Detailed Composition for <strong>{{foodName}}</strong>
+		                		 	Detailed Composition for <strong>{{foodName}}</strong> of 1 {{type}}
 		                		 	
 		                			<table class="table">
 		                			
@@ -346,11 +346,17 @@
 				.success(function(data) {
 				
 					console.log("Success returned from GETFOODDETAILS function");
-					$scope.foodName = $scope.food;
-					$scope.solid_fats = data[0].solid_fats;
-					$scope.added_sugar = data[0].added_sugar;
-					$scope.saturated_fats = data[0].saturated_fats;
-					$scope.food_calories = data[0].calories;
+					//$scope.foodName = $scope.food;
+					//$scope.solid_fats = data[0].solid_fats;
+					//$scope.added_sugar = data[0].added_sugar;
+					//$scope.saturated_fats = data[0].saturated_fats;
+					//$scope.food_calories = data[0].calories;
+					$scope.foodName = data[0].Display_Name;
+					$scope.type = data[0].Portion_Display_Name;
+					$scope.solid_fats = data[0].Solid_Fats;
+					$scope.added_sugar = data[0].Added_Sugars;
+					$scope.saturated_fats = data[0].Saturated_Fats;
+					$scope.food_calories = data[0].Calories;
 									
 				})
   			  			

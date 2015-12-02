@@ -366,6 +366,8 @@ function calculateCalorieProfile(weight, height, age, gender, exerciseType, goal
 		currentCalorie = BMR * 1.9;
 	}
 	
+	currentCalorie = currentCalorie * 1000;
+	
 	/*****************************************************************************************/
 	
 	// THIRD - Calculate calories user needs to burn or gain daily
@@ -388,6 +390,8 @@ function calculateCalorieProfile(weight, height, age, gender, exerciseType, goal
 		consumeCalorieDaily = consumeCalorieTotal / goalDays;
 		goalCalorieDaily = currentCalorie + consumeCalorieDaily;
 	}
+	
+	goalCalorieDaily = goalCalorieDaily / 1000;
 	
 	/*****************************************************************************************/
 	
@@ -652,7 +656,7 @@ function getTodayCalories (req, res){
 
 //This API pulls food details from FOOD_DB
 
-function getFoodDetails (req, res){
+/*function getFoodDetails (req, res){
 
 	var queryString;
 	var foodName = {}; 
@@ -664,6 +668,37 @@ function getFoodDetails (req, res){
 	queryString = "SELECT * FROM food_db WHERE food_name = '" + foodName.food_name + "'";
 	
 	console.log("FOOD_DB SELECT Query is: "+ queryString);
+	
+	
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{				
+			console.log("Food Details fetched successfully!!!");
+			res.end(JSON.stringify(results));
+					
+		}	
+		
+	},queryString);
+
+}*/
+
+
+function getFoodDetails (req, res){
+
+	var queryString;
+	var foodName = {}; 
+	
+	console.log("Inside Server's GETFOODDETAILS function...");
+		
+	foodName = req.body;
+	
+	queryString = "SELECT * FROM nutrients_table WHERE Display_Name = '" + foodName.food_name + "'";
+	
+	console.log("nutrients_table SELECT Query is: "+ queryString);
 	
 	
 	queryExec.fetchData(function(err,results){
