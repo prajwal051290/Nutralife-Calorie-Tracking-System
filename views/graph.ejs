@@ -112,12 +112,7 @@
                         <a href="email"><i class="fa fa-fw fa-envelope"></i> Email</a>
                     </li>
                     
-                    <li>
-                        <a href="#"><i class="fa fa-fw fa-desktop"></i> About Us</a>
-                    </li>
-                    
-                    
-                 </ul>
+                </ul>
                  
             </div>
             <!-- /.navbar-collapse -->
@@ -150,7 +145,8 @@
 	    								<select name="report" class="form-control beta" ng-model="report">
 	            							<option value="C">Calories Consumed</option>
 	            							<option value="B">Calories Burned</option>
-	            							<option value="N">Net Calories</option>
+	            							<option value="F">Food Details</option>
+	            							<option value="E">Exercise Details</option>
 	    								</select>
 	    								
 									</div>
@@ -184,7 +180,39 @@
 						</div>
 						
 					</div>  <!-- Graph - End -->
-					 
+					
+					<div class="row" ng-show="tables">
+					
+						<div class="col-lg-12 col-md-7 col-sm-9">
+						
+							<table class="table">
+  
+							    <thead>
+							    
+							      <tr>
+							        <th>{{column1}}</th>
+							        <th>{{column2}}</th>
+							        <th>{{column3}}</th>
+							       </tr>
+							      
+							    </thead>
+    
+							    <tbody ng-repeat="x in menuItems">
+							    
+							      <tr class="success">
+							        <td>{{x.Name}}</td>
+							        <td>{{x.Cost}}</td>
+							        <td><button type="button" class="btn btn-primary" ng-click="prepareBill(x.Name, x.Cost)">Select</button></td>
+							      </tr>
+							      
+							    </tbody>
+    
+  					  		</table>			
+							
+						</div>
+						
+					</div>  <!-- Table - End -->
+					
 				</div>
             
             <!-- /.container -->	
@@ -300,6 +328,85 @@
 			
 	})
 		
+	} else if ($scope.report === "B"){
+	
+	
+		$http.get("/getDailyBurnedCalories")
+		.success(function(data) {
+		
+			console.log("Success returned from getDailyBurnedCalories function");
+			console.log(data.results);
+			
+			chart = AmCharts.makeChart("chartdiv", {
+		    "theme": "light",
+		    "type": "serial",
+			"startDuration": 2,
+		    "dataProvider": data.results,
+		    "valueAxes": [{
+		        "position": "left",
+		        "axisAlpha":0,
+		        "gridAlpha":0         
+		    }],
+		    "graphs": [{
+		        "balloonText": "[[category]]: <b>[[value]]</b>",
+		        "colorField": "color",
+		        "fillAlphas": 0.85,
+		        "lineAlpha": 0.1,
+		        "type": "column",
+		        "topRadius":1,
+		        "valueField": "Calories"
+		    }],
+		    "depth3D": 40,
+			"angle": 30,
+		    "chartCursor": {
+		        "categoryBalloonEnabled": false,
+		        "cursorAlpha": 0,
+		        "zoomable": false
+		    },    
+		    "categoryField": "Day",
+		    "categoryAxis": {
+		        "gridPosition": "start",
+		        "axisAlpha":0,
+		        "gridAlpha":0
+		        
+		    },
+		    "export": {
+		    	"enabled": true
+		     }
+		
+		},0);
+	
+		jQuery('.chart-input').off().on('input change',function() {
+			var property	= jQuery(this).data('property');
+			var target		= chart;
+			chart.startDuration = 0;
+		
+			if ( property == 'topRadius') {
+				target = chart.graphs[0];
+			}
+		
+			target[property] = this.value;
+			chart.validateNow();
+		});
+			
+	})
+	
+	} else if ($scope.report === "F"){
+	
+		$http.get("/getFoodLog")
+  			.success(function(data) {
+  				console.log("Success returned from getFoodLog function");
+  				
+  			})
+	
+	} else if ($scope.report === "E"){
+	
+		$http.get("/getExerciseLog")
+  			.success(function(data) {
+  				console.log("Success returned from getExerciseLog function");
+  				
+  			})
+	
 	}
 		
 	}

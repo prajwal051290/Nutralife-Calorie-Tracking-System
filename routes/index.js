@@ -921,7 +921,7 @@ function getDailyConsumedCalories (req, res){
 	
 	console.log("Inside Server's getDailyConsumedCalories function...");
 
-	queryString = "SELECT SUM(log_calories) as log_calories, log_day from user_food_exercise_log where log_type = 'F' group by (log_day) order by 2 asc";
+	queryString = "SELECT SUM(log_calories) as log_calories, log_day from user_food_exercise_log where emailid = '" + req.session.emailid + "' AND log_type = 'F' group by (log_day) order by 2 asc";
 	console.log("getDailyConsumedCalories SELECT Query is: "+ queryString);
 		
 	queryExec.fetchData(function(err,results){
@@ -965,7 +965,7 @@ function getDailyConsumedCalories (req, res){
 }
 
 
-//This APIs Daily Calories Burned for Graph representation
+//This API pulls Daily Calories Burned for Graph representation
 
 function getDailyBurnedCalories (req, res){
 
@@ -978,7 +978,7 @@ function getDailyBurnedCalories (req, res){
 	
 	console.log("Inside Server's getDailyBurnedCalories function...");
 
-	queryString = "SELECT SUM(log_calories) as log_calories, log_day from user_food_exercise_log where log_type = 'E' group by (log_day) order by 2 asc";
+	queryString = "SELECT SUM(log_calories) as log_calories, log_day from user_food_exercise_log where emailid = '" + req.session.emailid + "' AND log_type = 'E' group by (log_day) order by 2 asc";
 	console.log("getDailyBurnedCalories SELECT Query is: "+ queryString);
 		
 	queryExec.fetchData(function(err,results){
@@ -1019,8 +1019,6 @@ function getDailyBurnedCalories (req, res){
 	},queryString);
 	
 }
-
-
 
 
 // Testing Email Service
@@ -1110,6 +1108,70 @@ function getBodyProfile (req, res){
 }
 
 
+
+
+//This API gets user's food details
+
+function getFoodLog (req, res){
+
+	var queryString;
+	var response;
+	
+	console.log("Inside Server's getFoodLog function...");
+
+	queryString = "SELECT * FROM user_food_exercise_log WHERE emailid = '" + req.session.emailid + "' AND log_type = 'F'";
+	console.log("getFoodLog SELECT Query is: "+ queryString);
+		
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{	
+			
+			console.log("User's Food Log fetched successfully!!!");
+			res.end(JSON.stringify(results));
+			
+		}	
+		
+	},queryString);
+	
+}
+
+
+
+//This API gets user's exercise details
+
+function getExerciseLog (req, res){
+
+	var queryString;
+	var response;
+	
+	console.log("Inside Server's getExerciseLog function...");
+
+	queryString = "SELECT * FROM user_food_exercise_log WHERE emailid = '" + req.session.emailid + "' AND log_type = 'E'";
+	console.log("getExerciseLog SELECT Query is: "+ queryString);
+		
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{	
+			
+			console.log("User's Exercise Log fetched successfully!!!");
+			res.end(JSON.stringify(results));
+			
+		}	
+		
+	},queryString);
+	
+}
+
+
+
 // Rendering Pages APIs
 
 exports.index=index;
@@ -1150,6 +1212,10 @@ exports.getBodyProfile=getBodyProfile;
 
 exports.getDailyConsumedCalories=getDailyConsumedCalories;
 exports.getDailyBurnedCalories=getDailyBurnedCalories;
+
+exports.getFoodLog=getFoodLog;
+exports.getExerciseLog=getExerciseLog;
+
 
 exports.sendEmail=sendEmail;
 

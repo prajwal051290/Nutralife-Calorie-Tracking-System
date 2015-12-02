@@ -67,6 +67,10 @@ app.get('/email', routes.email);
 app.get('/getDailyConsumedCalories', routes.getDailyConsumedCalories);
 app.get('/getDailyBurnedCalories', routes.getDailyBurnedCalories);
 
+app.get('/getFoodLog', routes.getFoodLog);
+app.get('/getExerciseLog', routes.getExerciseLog);
+
+
 /********* POST REQUESTS *************/
 
 app.post('/newaccount', routes.newAccount);
