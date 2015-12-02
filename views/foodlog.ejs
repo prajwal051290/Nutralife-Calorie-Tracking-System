@@ -166,6 +166,10 @@
 		                		 	
 		                		 	Detailed Composition for <strong>{{foodName}}</strong> of 1 {{type}}
 		                		 	
+		                		 	<br>
+		                		 	
+		                			How many {{type}} did you have? <input type="number" required="" autofocus="" ng-model="foodqty">
+                					                		 	
 		                			<table class="table">
 		                			
 										<tbody>
@@ -392,7 +396,7 @@
   			
   			console.log("Inside addFoodCatalog() function");
   			
-  			catalogDetails = {"log_name": $scope.food, "log_type": "F", "log_calories": $scope.food_calories};
+  			catalogDetails = {"log_name": $scope.food, "log_type": "F", "log_calories": $scope.food_calories, "foodqty": $scope.foodqty};
   			
   			$http.post("/addToCatalog", catalogDetails)
 				.success(function(data) {

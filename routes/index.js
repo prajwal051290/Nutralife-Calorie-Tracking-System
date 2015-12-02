@@ -763,6 +763,8 @@ function addToCatalog (req, res){
 		
 	catalog = req.body;
 	
+	catalog.log_calories = catalog.log_calories * catalog.foodqty; 
+	
 	queryString = "INSERT INTO user_food_exercise_log (emailid, log_name, log_type, log_day, log_calories) VALUES " +
 				  "('" + req.session.emailid + "', '" + catalog.log_name + "', '" + catalog.log_type + "', CURDATE(), '" + catalog.log_calories + "')";  
 	
