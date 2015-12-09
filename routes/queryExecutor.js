@@ -5,9 +5,9 @@ var mysql = require('mysql');
 
 function getConnection(){
 	var connection = mysql.createConnection({
-	    host     : 'localhost',
-	    user     : 'root',
-	    password : 'Mysql1990',
+	    host     : 'aae9afeyp7dhsy.cyo1wsuzp2qo.us-west-2.rds.amazonaws.com',
+	    user     : 'nutralife1234',
+	    password : 'nutralife1234',
 	    database : 'nutralife',
 	    port	 : 3306
 	});
