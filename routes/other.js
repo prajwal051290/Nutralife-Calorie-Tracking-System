@@ -196,7 +196,7 @@ function getUserTypes (req, res){
 	
 	console.log("Inside Server's getUserTypes function...");
 
-	queryString = "select count(*) as lose from nutralife.user_body_profile where current_weight > goal_weight";
+	queryString = "select count(*) as lose from user_body_profile where current_weight > goal_weight";
 	console.log("getUserTypes SELECT Query1 is: "+ queryString);
 		
 	queryExec.fetchData(function(err,results){
@@ -211,7 +211,7 @@ function getUserTypes (req, res){
 			graphJson = {"Weight Type": "Want To Lose Weight", "Count": results[0].lose.toString()};
 			graphData.push(graphJson);
 			
-			queryString = "select count(*) as gain from nutralife.user_body_profile where current_weight < goal_weight";
+			queryString = "select count(*) as gain from user_body_profile where current_weight < goal_weight";
 			console.log("getUserTypes SELECT Query2 is: "+ queryString);
 			
 			queryExec.fetchData(function(err,results){
@@ -249,7 +249,7 @@ function getUserGoal (req, res){
 	
 	console.log("Inside Server's getUserTypes function...");
 
-	queryString = "select count(*) as meet from nutralife.user_body_profile where meet_goal = 'Y'";
+	queryString = "select count(*) as meet from user_body_profile where meet_goal = 'Y'";
 	console.log("getUserTypes SELECT Query1 is: "+ queryString);
 		
 	queryExec.fetchData(function(err,results){
@@ -264,7 +264,7 @@ function getUserGoal (req, res){
 			graphJson = {"Goal": "Reaching Calorie Consumption Goal", "Count": results[0].meet.toString()};
 			graphData.push(graphJson);
 			
-			queryString = "select count(*) as down from nutralife.user_body_profile where meet_goal = 'D'";
+			queryString = "select count(*) as down from user_body_profile where meet_goal = 'D'";
 			console.log("getUserTypes SELECT Query2 is: "+ queryString);
 			
 			queryExec.fetchData(function(err,results){
@@ -278,7 +278,7 @@ function getUserGoal (req, res){
 					graphData.push(graphJson);
 					
 					
-					queryString = "select count(*) as up from nutralife.user_body_profile where meet_goal = 'U'";
+					queryString = "select count(*) as up from user_body_profile where meet_goal = 'U'";
 					console.log("getUserTypes SELECT Query3 is: "+ queryString);
 					
 					queryExec.fetchData(function(err,results){
