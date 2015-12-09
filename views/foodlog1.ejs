@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Nutralife - Database</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/stylesheets/sb-admin.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="/stylesheets/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    
+</head>
+
+<body ng-app="foodLogAngular" ng-controller="foodLogController">
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">NUTRALIFE</a>
+            </div>
+            
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+            
+                <ul class="nav navbar-nav side-nav">
+                
+                    <li>
+                        <a href="bodyprof"><i class="fa fa-fw fa-edit"></i> Body Profile</a>
+                    </li>
+                    
+                    <li>
+                    	<a href="food"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>
+                    </li>
+                    
+                    <li>
+                        <a href="repo"><i class="fa fa-fw fa-bar-chart-o"></i> Reports</a>
+                    </li>
+                    
+                 </ul>
+                 
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Food / Exercise Database
+                        </h1>
+                        
+                    </div>
+                </div>
+                <!-- /.row -->
+				
+						<div class="row">
+	                
+		                    <div class="col-lg-6 col-md-12">
+		                	
+		                		<div class="input-group">
+		                		
+	      							<span class="input-group-btn">
+	        							<button class="btn btn-default" type="button" ng-click="getFoodDetails()">Go!</button>
+	      							</span>
+	      							
+	      							<input type="text" class="form-control" placeholder="Search food by name..." ng-model="food">
+	      							
+	    						</div><!-- /input-group --> 
+		                		                		    
+		                    </div>
+		                    
+		                    <div class="col-lg-6 col-md-12">
+		                
+		                		<div class="input-group">
+		                		
+	      							<span class="input-group-btn">
+	        							<button class="btn btn-default" type="button" ng-click="getExerciseDetails()">Go!</button>
+	      							</span>
+	      							
+	      							<input type="text" class="form-control" placeholder="Search exercise by name..." ng-model="exercise">
+	      							
+	    						</div><!-- /input-group -->
+		                        
+		                    </div>
+	                    
+	              		</div>
+	              		
+	              		<div ng-show="blankSpace">
+	              		
+	              			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	              		
+               			</div>
+               			
+               <div ng-show="foodlog2">
+               
+               		    <br>
+	              		
+	              		<div class="row">
+	              		
+		              		<div ng-show="foodtable">
+		              		
+		              			<div class="col-lg-6 col-md-12">
+		                		 	
+		                		 	Detailed Composition for <strong>{{foodName}}</strong> of 1 {{type}}
+		                		 	
+		                		 	<br> <br>
+		                		 	
+		                			<table class="table">
+		                			
+										<tbody>
+									    
+									      <tr class="success">
+									        <td>Solid Fats</td>
+									        <td>{{solid_fats}} g</td>
+									      </tr>
+									      
+									      <tr class="success">
+									        <td>Added Sugar</td>
+									        <td>{{added_sugar}} g</td>
+									      </tr>
+									      
+									      <tr class="success">
+									        <td>Saturated Fats</td>
+									        <td>{{saturated_fats}} g</td>
+									      </tr>
+									      
+									      <tr class="success">
+									        <td>Calories</td>
+									        <td>{{food_calories}}</td>
+									      </tr>
+									      
+									      
+									    </tbody>
+									    
+	  								</table>
+		                		 	
+		                		</div>
+	                		
+	                		</div>
+	                		
+	                	</div>
+	                	
+                		<br><br><br><br><br><br><br><br>
+	                		 
+	               </div> <!-- END OF FOODLOG2 -->
+	               
+	               
+	               <div ng-show="foodlog3">
+               
+               		    <br>
+	              		
+	              		<div class="row">
+	              		
+	              			<div class="col-lg-6 col-md-12">
+		                		 	
+	                		 	Calories burned with <strong>{{exerciseName}}</strong> per minute: <strong>{{calories}}</strong>
+		                		 	
+	                		</div>
+	                		
+                		</div>
+                		
+                		<br>
+                		
+                		<br><br><br><br><br><br><br><br><br><br><br><br><br>
+	                		 
+	               </div> <!-- END OF FOODLOG3 -->
+	               
+               
+	   	      </div>
+    	      
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <!--
+    <script src="../public/js/raphael.min.js"></script>
+    <script src="../public/js/morris.min.js"></script>
+    <script src="../public/js/morris-data.js"></script>
+	-->
+	
+	<script>
+  
+  	<!-- Controller for Food Log -->
+  	
+  	var foodLog = angular.module('foodLogAngular', []);
+	foodLog.controller('foodLogController', foodLogOperations); 
+			
+	function foodLogOperations($scope, $http) {
+  		
+  			$scope.foodlog2 = false;
+  			$scope.foodlog3 = false;
+  			$scope.foodtable = false;
+  			
+  			$scope.blankSpace = true;
+  			
+  			var foodDetails = [];
+  			var exerciseDetails = [];
+  			
+  		$http.get("/userProfile")
+  			.success(function(data) {
+  				console.log("Success returned from USERPROFILE function");
+  				$scope.profile = data[0].first_name + " " + data[0].last_name;
+  			})	
+  			
+  		/* Get food details from FOOD_DB */
+  		
+  		$scope.getFoodDetails = function(){
+  		
+  			var foodName = {};
+  			
+  			$scope.foodlog3 = false;
+  			
+  			$scope.foodlog2 = true;
+  			$scope.foodtable = true;
+  			
+  			$scope.blankSpace = false;
+  			
+  			foodName = {"food_name": $scope.food};
+  			$http.post("/getFoodDetails", foodName)
+				.success(function(data) {
+				
+					console.log("Success returned from GETFOODDETAILS function");
+					//$scope.foodName = $scope.food;
+					//$scope.solid_fats = data[0].solid_fats;
+					//$scope.added_sugar = data[0].added_sugar;
+					//$scope.saturated_fats = data[0].saturated_fats;
+					//$scope.food_calories = data[0].calories;
+					$scope.foodName = data[0].Display_Name;
+					$scope.type = data[0].Portion_Display_Name;
+					$scope.solid_fats = data[0].Solid_Fats;
+					$scope.added_sugar = data[0].Added_Sugars;
+					$scope.saturated_fats = data[0].Saturated_Fats;
+					$scope.food_calories = data[0].Calories;
+									
+				})
+  			  			
+  		}
+  		
+  		/* Get exercise details from EXERCISE_DB */
+  		
+  		$scope.getExerciseDetails = function(){
+  		
+  			$scope.foodlog2 = false;
+  			$scope.foodtable = false;
+  			
+  			$scope.foodlog3 = true;
+  			 
+  			$scope.blankSpace = false;
+  			  		
+  			var exerciseName = {};
+  			exerciseName = {"exercise_name": $scope.exercise};
+  			  			
+  			$http.post("/getExerciseDetails", exerciseName)
+				.success(function(data) {
+					console.log("Success returned from GETEXERCISEDETAILS function");
+					$scope.exerciseName = $scope.exercise;
+					$scope.calories = data[0].calories;				
+				})
+  			  			
+  		}
+  		
+  		 
+  		$scope.addFoodCatalog = function(){
+  		
+  			var catalogDetails = {};
+  			
+  			console.log("Inside addFoodCatalog() function");
+  			
+  			catalogDetails = {"log_name": $scope.food, "log_type": "F", "log_calories": $scope.food_calories, "foodqty": $scope.foodqty};
+  			
+  			$http.post("/addToCatalog", catalogDetails)
+				.success(function(data) {
+					console.log("Success returned from ADDFOODCATALOG function");
+					$scope.foodLogStatus = "YOUR FOOD LOGGED SUCCESSFULLY!!!";	
+				})
+  			  			
+  		}
+  		
+  		
+  		$scope.addExerciseCatalog = function(){
+  		
+  			var catalogDetails = {};
+  			
+  			console.log("Inside addExerciseCatalog() function");
+  			
+  			catalogDetails = {"log_name": $scope.exercise, "log_type": "E", "log_calories": $scope.calories, "exercise_time": $scope.time};
+  			
+  			$http.post("/addToExerciseCatalog", catalogDetails)
+				.success(function(data) {
+					console.log("Success returned from ADDFOODCATALOG function");
+					$scope.exerciseLogStatus = "YOUR EXERCISE LOGGED SUCCESSFULLY!!!";	
+				})
+  			  			
+  		}
+  		
+  		  		 		
+  	}
+  		
+	</script>
+	
+	
+	
+</body>
+
+</html>

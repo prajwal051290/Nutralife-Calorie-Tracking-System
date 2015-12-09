@@ -1062,6 +1062,77 @@ function getDailyBurnedCalories (req, res){
 }
 
 
+
+
+function getCalorieComparison (req, res){
+
+	var queryString;
+	var response;
+	var graphJson, graphData = [];
+	var tzoffset;
+	var localISOTime;
+	var color = "#0D52D1";
+	
+	console.log("Inside Server's getCalorieComparison function...");
+
+	queryString = "SELECT SUM(log_calories) as log_calories, log_day from user_food_exercise_log where emailid = '" + req.session.emailid + "' AND log_type = 'F' group by (log_day) order by 2 asc";
+	console.log("getCalorieComparison SELECT Query1 is: "+ queryString);
+		
+	queryExec.fetchData(function(err,results){
+		
+		if(err){
+			throw err;
+		}
+		else 
+		{				
+			console.log("User's Daily Calorie consumption fetched successfully");
+			//console.log(results)
+			for (var i = 0; i < results.length; i++){
+				
+				tzoffset = results[i].log_day.getTimezoneOffset() * 60000; //offset in milliseconds
+				localISOTime = (new Date(results[i].log_day - tzoffset)).toISOString().substring(0, 10);
+				
+				graphJson = {"Day": localISOTime, "Calories": results[i].log_calories.toString()};
+				graphData.push(graphJson);
+				
+			}
+				
+				queryString = "SELECT SUM(log_calories) as log_calories, log_day from user_food_exercise_log where emailid = '" + req.session.emailid + "' AND log_type = 'E' group by (log_day) order by 2 asc";
+				console.log("getCalorieComparison SELECT Query2 is: "+ queryString);
+				
+				queryExec.fetchData(function(err,results){
+					
+					if(err){
+						throw err;
+					}
+					else 
+					{	
+						
+						console.log("User's Daily Calorie burned fetched successfully");
+						//console.log(results)
+						for (var i = 0; i < graphData.length; i++){
+							
+							graphData[i].Calories1 = results[i].log_calories.toString();
+														
+						}
+						
+						response = {status:200, results: graphData};
+						res.end(JSON.stringify(response));
+						
+					}
+					
+				},queryString);
+				
+			}
+			
+	},queryString);
+	
+}
+
+
+
+
+
 // Testing Email Service
 
 function sendEmail (req, res){
@@ -1253,6 +1324,7 @@ exports.getBodyProfile=getBodyProfile;
 
 exports.getDailyConsumedCalories=getDailyConsumedCalories;
 exports.getDailyBurnedCalories=getDailyBurnedCalories;
+exports.getCalorieComparison=getCalorieComparison;
 
 exports.getFoodLog=getFoodLog;
 exports.getExerciseLog=getExerciseLog;

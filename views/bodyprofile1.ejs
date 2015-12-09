@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Nutralife - Body Profile</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/stylesheets/sb-admin.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="/stylesheets/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    
+</head>
+
+<body ng-app="bodyProfileAngular" ng-controller="bodyProfileController">
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">NUTRALIFE</a>
+            </div>
+            
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+            
+                <ul class="nav navbar-nav side-nav">
+                
+                    <li>
+                        <a href="bodyprof"><i class="fa fa-fw fa-edit"></i> Body Profile</a>
+                    </li>
+                    
+                    <li>
+                        <a href="food"><i class="fa fa-fw fa-table"></i> Food/Exercise Log</a>
+                    </li>
+                    
+                    <li>
+                        <a href="repo"><i class="fa fa-fw fa-bar-chart-o"></i> Reports</a>
+                    </li>
+                                        
+                </ul>
+                 
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+    
+    	<div id="page-wrapper">
+
+            <div class="container-fluid">
+    	
+    
+		    <div class="container">
+			
+				<div class="row">
+				
+					<div class="col-lg-6 col-md-7 col-sm-9">
+			
+					  <h4 style="border-bottom: 1px solid #c5c5c5;">
+					    Complete Body Profile
+					  </h4>
+			  
+			  		<div style="padding: 20px;" id="form-olvidado">
+			  		
+			  			<form accept-charset="UTF-8" role="form" id="login-form">
+			  			
+			    			<fieldset ng-disabled="disableProfile">
+				      		
+								<div class="form-group input-group">
+						        	<strong>Current Weight: </strong><input class="form-control" placeholder="Current Weight in kg" name="current_weight" type="number" autofocus="" ng-model="current_weight">
+						        </div>
+						        
+						        <div class="form-group input-group">
+						        	<strong>Current Height: </strong><input class="form-control" placeholder="Current Height in cm" name="current_height" type="number" autofocus="" ng-model="current_height">
+						        </div>		      		
+				      			
+				      			
+						        <div class="form-group input-group">
+						        
+						           	<label class="control-label">Gender</label>
+						           	
+    								<select name="gender" class="form-control beta" ng-model="gender">
+            							<option value="M">Male</option>
+            							<option value="F">Female</option>
+    								</select>
+									
+						        </div>
+						        
+						        <div class="form-group input-group">
+						        	<strong>Age: </strong><input class="form-control" placeholder="Complete Age in Years" name="age" type="number" autofocus="" ng-model="age">
+						        </div>
+						        
+						        <strong>How would you describe your daily activities?</strong>
+						        
+						        <div class="form-group input-group">
+						        
+						           	<select name="activity" class="form-control beta" ng-model="activity">
+            							<option value="A">Little to no exercise</option>
+            							<option value="B">Light exercise (1 to 3 days per week)</option>
+            							<option value="C">Moderate exercise (3 to 5 days per week)</option>
+            							<option value="D">Heavy exercise (6 to 7 days per week)</option>
+            							<option value="E">Very heavy exercise (twice per day, extra heavy workouts)</option>
+            						</select>
+									
+						        </div>
+						        
+						        <div class="form-group input-group">
+						        	<strong>Goal Weight: </strong><input class="form-control" placeholder="Goal Weight in kg" name="goal_weight" type="number" value="" ng-model="goal_weight">
+						        </div>
+						        
+						        <div class="form-group input-group">
+						        	<strong>Goal Days: </strong><input class="form-control" placeholder="Goal Days" name="goal_days" type="number" value="" ng-model="goal_days">
+						        </div>
+						        
+						        <div class="form-group input-group">
+						        
+						        	<button class="btn btn-primary btn-block" ng-click="createBodyProfile()">Show Estimate of Calories</button>
+						        	
+						        </div>
+						        
+						        <div ng-show="error">
+						        	<span style="color:red; font-weight:bold";>{{bodyProfileValidation}}</span>
+						        </div>
+						        
+						        <div ng-show="success">
+						        	<span style="color:green; font-weight:bold";>Your Current Daily Calorie Consumption: <<{{currentCalorie}}>></span> <br>
+						        	<span style="color:green; font-weight:bold";>Your Ideal Daily Calorie Consumption Should be: <<{{goalCalorie}}>></span>
+						        </div>
+						        
+				      		</fieldset>
+			      		
+			    		</form>
+			    		
+			  		</div>
+			  		
+			  		</div>
+			  		
+			  	</div>
+			
+			</div>
+			
+		</div>
+    	      
+        <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+		
+
+    <!-- jQuery -->
+    <script src="/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <!--
+    <script src="../public/js/raphael.min.js"></script>
+    <script src="../public/js/morris.min.js"></script>
+    <script src="../public/js/morris-data.js"></script>
+	-->
+	
+	<script>
+  
+  	<!-- Controller for Food Log -->
+  	
+  	var bodyProfile = angular.module('bodyProfileAngular', []);
+	bodyProfile.controller('bodyProfileController', bodyProfileOperations); 
+			
+	function bodyProfileOperations($scope, $http) {
+  		
+  		$scope.error = false;	
+  		$scope.success = false;
+  		$scope.disableProfile = false;
+  		
+  		$scope.createBodyProfile = function(){
+  		
+  			console.log("Activity :" + $scope.activity);
+  			  			
+  			var bodyProfile = {"weight": $scope.current_weight, "height": $scope.current_height, "gender": $scope.gender, "age": $scope.age, "activity": $scope.activity, "goalWeight": $scope.goal_weight, "goalDays": $scope.goal_days};
+  			  			
+  			$http.post("/createBodyProfile1", bodyProfile)
+				.success(function(data) {
+				
+				if (data === "weight"){
+		
+					$scope.bodyProfileValidation = "CURRENT WEIGHT IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+  					
+					
+				}else if (data === "height"){
+					
+					$scope.bodyProfileValidation = "CURRENT HEIGHT IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+  					$scope.disableProfile = true;
+					
+				}else if (data === "gender"){
+					
+					$scope.bodyProfileValidation = "GENDER IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+					
+				}else if (data === "age"){
+					
+					$scope.bodyProfileValidation = "AGE IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+					
+				}else if (data === "activity"){
+					
+					$scope.bodyProfileValidation = "ACTIVITY IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+					
+				}else if (data === "goalWeight"){
+					
+					$scope.bodyProfileValidation = "GOAL WEIGHT IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+					
+				}else if (data === "goalDays"){
+					
+					$scope.bodyProfileValidation = "GOAL DAYS IS MANDATORY!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+					
+				}else if (data === "same"){
+				
+					$scope.bodyProfileValidation = "You Have Already Reached Your Goal!!!";
+					$scope.error = true;	
+  					$scope.success = false;
+				
+				}else {
+				
+					console.log("Success returned from CREATEBODYPROFILE function");
+					$scope.error = false;	
+  					$scope.success = true;
+					$scope.currentCalorie = data.currentCalorie;
+					$scope.goalCalorie = data.goalCalorieDaily;
+										
+				}
+			})
+  		}
+  		
+  	}
+  	
+	</script>
+	
+	
+	
+</body>
+
+</html>

@@ -43,7 +43,7 @@
 	
 	<style>
 		#chartdiv {
-		width		: 100%;
+		width		: 80%;
 		height		: 435px;
 		font-size	: 11px;
 		}
@@ -143,8 +143,9 @@
 							           	<label class="control-label">Choose Your Option</label>
 							           	
 	    								<select name="report" class="form-control beta" ng-model="report">
-	            							<option value="C">Calories Consumed</option>
+	            							<option value="A">Calories Consumed</option>
 	            							<option value="B">Calories Burned</option>
+	            							<option value="C">Calories Comparison</option>
 	            						</select>
 	    								
 									</div>
@@ -238,7 +239,8 @@
     <script src="../public/js/morris-data.js"></script>
 	-->
 	
-	<script>
+
+<script>
   
   	<!-- Controller Graph -->
   	
@@ -264,7 +266,7 @@
 	
 	console.log("Graph Function: " + $scope.report);
 	
-	if ($scope.report === "C"){
+	if ($scope.report === "A"){
 	
 		$http.get("/getDailyConsumedCalories")
 		.success(function(data) {
@@ -389,30 +391,81 @@
 			
 	})
 	
-	} else if ($scope.report === "F"){
+	} else if ($scope.report === "C"){
 	
-		$http.get("/getFoodLog")
-  			.success(function(data) {
-  				console.log("Success returned from getFoodLog function");
-  				
-  			})
 	
-	} else if ($scope.report === "E"){
+		$http.get("/getCalorieComparison")
+		.success(function(data) {
 	
-		$http.get("/getExerciseLog")
-  			.success(function(data) {
-  				console.log("Success returned from getExerciseLog function");
-  				
-  			})
 	
-	}
+			console.log("Success returned from getCalorieComparison function");
+			console.log(data.results);
+			
+			var chart = AmCharts.makeChart("chartdiv", {
+		    "theme": "light",
+		    "type": "serial",
+		    "dataProvider": data.results,
+		    "valueAxes": [{
+		        "stackType": "3d",
+		        "unit": "Calories",
+		        "position": "left",
+		        "title": "Calorie Consumption vs Burned",
+		    }],
+		    "startDuration": 1,
+		    "graphs": [{
+		        "balloonText": "GDP grow in [[category]] (2004): <b>[[value]]</b>",
+		        "fillAlphas": 0.9,
+		        "lineAlpha": 0.2,
+		        "title": "2004",
+		        "type": "column",
+		        "valueField": "Calories"
+		    }, {
+		        "balloonText": "GDP grow in [[category]] (2005): <b>[[value]]</b>",
+		        "fillAlphas": 0.9,
+		        "lineAlpha": 0.2,
+		        "title": "2005",
+		        "type": "column",
+		        "valueField": "Calories1"
+		    }],
+		    "plotAreaFillAlphas": 0.1,
+		    "depth3D": 60,
+		    "angle": 30,
+		    "categoryField": "Day",
+		    "categoryAxis": {
+		        "gridPosition": "start"
+		    },
+		    "export": {
+		    	"enabled": true
+		     }
+		});
+		jQuery('.chart-input').off().on('input change',function() {
+			var property	= jQuery(this).data('property');
+			var target		= chart;
+			chart.startDuration = 0;
 		
+			if ( property == 'topRadius') {
+				target = chart.graphs[0];
+		      	if ( this.value == 0 ) {
+		          this.value = undefined;
+		      	}
+			}
+		
+			target[property] = this.value;
+			chart.validateNow();
+		});
+	
+	})
+		
+	}
+	
 	}
 	
 }
   		
 	</script>
-	
+
+
+
 	
 </body>
 

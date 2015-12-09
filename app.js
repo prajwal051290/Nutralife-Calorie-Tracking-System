@@ -5,7 +5,7 @@
 
 var express = require('express')
   , routes = require('./routes')
- // , user = require('./routes/user')
+  , other = require('./routes/other')
   , http = require('http')
   , path = require('path')
   //Importing the 'client-sessions' module
@@ -66,6 +66,7 @@ app.get('/email', routes.email);
 
 app.get('/getDailyConsumedCalories', routes.getDailyConsumedCalories);
 app.get('/getDailyBurnedCalories', routes.getDailyBurnedCalories);
+app.get('/getCalorieComparison', routes.getCalorieComparison);
 
 app.get('/getFoodLog', routes.getFoodLog);
 app.get('/getExerciseLog', routes.getExerciseLog);
@@ -86,6 +87,26 @@ app.post('/createBodyProfile', routes.createBodyProfile);
 
 
 app.post('/sendEmail', routes.sendEmail);
+
+
+/********************* Requests of Other Users ***********************/
+
+/****** GET Requests ************/
+
+app.get('/bodyprof', other.bodyprof);
+app.get('/food', other.food);
+app.get('/repo', other.repo);
+
+
+/*** GRAPH *****/
+app.get('/getUserTypes', other.getUserTypes);
+app.get('/getUserGoal', other.getUserGoal);
+
+
+/****** POST Requests ***********/
+
+app.post('/createBodyProfile1', other.createBodyProfile1);
+
 
 
 http.createServer(app).listen(app.get('port'), function(){
