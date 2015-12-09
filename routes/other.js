@@ -208,7 +208,7 @@ function getUserTypes (req, res){
 		{				
 			console.log("Users who want lose weight fetched successfully");
 			
-			graphJson = {"Weight Type": "Lose", "Count": results[0].lose.toString()};
+			graphJson = {"Weight Type": "Want To Lose Weight", "Count": results[0].lose.toString()};
 			graphData.push(graphJson);
 			
 			queryString = "select count(*) as gain from nutralife.user_body_profile where current_weight < goal_weight";
@@ -221,7 +221,7 @@ function getUserTypes (req, res){
 				}
 				else 
 				{
-					graphJson = {"Weight Type": "Gain", "Count": results[0].gain.toString()};
+					graphJson = {"Weight Type": "Want To Gain Weight", "Count": results[0].gain.toString()};
 					graphData.push(graphJson);
 			
 					response = {status:200, results: graphData};
@@ -261,10 +261,10 @@ function getUserGoal (req, res){
 		{				
 			console.log("Users who want lose weight fetched successfully");
 			
-			graphJson = {"Goal": "meet", "Count": results[0].meet.toString()};
+			graphJson = {"Goal": "Reaching Calorie Consumption Goal", "Count": results[0].meet.toString()};
 			graphData.push(graphJson);
 			
-			queryString = "select count(*) as down from nutralife.user_body_profile where meet_goal = 'N'";
+			queryString = "select count(*) as down from nutralife.user_body_profile where meet_goal = 'D'";
 			console.log("getUserTypes SELECT Query2 is: "+ queryString);
 			
 			queryExec.fetchData(function(err,results){
@@ -274,11 +274,30 @@ function getUserGoal (req, res){
 				}
 				else 
 				{
-					graphJson = {"Goal": "down", "Count": results[0].down.toString()};
+					graphJson = {"Goal": "Short of Calorie Consumption Goal", "Count": results[0].down.toString()};
 					graphData.push(graphJson);
-			
-					response = {status:200, results: graphData};
-					res.end(JSON.stringify(response));
+					
+					
+					queryString = "select count(*) as up from nutralife.user_body_profile where meet_goal = 'U'";
+					console.log("getUserTypes SELECT Query3 is: "+ queryString);
+					
+					queryExec.fetchData(function(err,results){
+						
+						if(err){
+							throw err;
+						}
+						else 
+						{
+							graphJson = {"Goal": "Exceeding Calorie Consumption Goal", "Count": results[0].up.toString()};
+							graphData.push(graphJson);
+								
+							response = {status:200, results: graphData};
+							res.end(JSON.stringify(response));
+							
+						}
+						
+					},queryString);
+						
 				}	
 		
 			},queryString);
