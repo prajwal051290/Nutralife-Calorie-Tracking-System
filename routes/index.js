@@ -1147,8 +1147,8 @@ function sendEmail (req, res){
 		var transporter = nodemailer.createTransport({
 		 service: 'Yahoo',
 		 auth: {
-		     user: 'prajwal_kondawar@yahoo.co.in',
-		     pass: 'Legerdeain'
+		     user: 'XXX',
+		     pass: 'YYY'
 		 }
 		});
 		
